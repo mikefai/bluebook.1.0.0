@@ -13,7 +13,7 @@ const vm = require("vm");
 const html = fs.readFileSync("index.html", "utf8");
 const start = html.indexOf("const DOMAINS = [");
 const end = html.indexOf("const STORAGE_KEY =");
-const code = html.slice(start, end) + "\nmodule.exports = { DOMAINS, QUESTION_TYPES, CURRICULUM_DATA, DRILL_ITEMS, MOCK_1_DATA, ExamScaffoldEngine, evaluateGridIn, calculateScaledScore };";
+const code = html.slice(start, end) + "\nmodule.exports = { DOMAINS, QUESTION_TYPES, CURRICULUM_DATA, DRILL_ITEMS, MOCK_1_DATA, ExamScaffoldEngine, evaluateGridIn, calculateScaledScore, getReadingQuestionTip };";
 
 const mod = { exports: {} };
 vm.runInNewContext(code, { module: mod, exports: mod.exports, console, Math });
@@ -25,7 +25,8 @@ const {
   MOCK_1_DATA,
   ExamScaffoldEngine,
   evaluateGridIn,
-  calculateScaledScore
+  calculateScaledScore,
+  getReadingQuestionTip
 } = mod.exports;
 
 /**
@@ -417,6 +418,19 @@ for (let examId = 1; examId <= 10; examId++) {
     if (mcQuestions[i].correctAnswer === mcQuestions[i - 1].correctAnswer) {
       failures.push(`Exam ${examId}: Consecutive duplicate correctAnswer '${mcQuestions[i].correctAnswer}' at ${mcQuestions[i - 1].id} -> ${mcQuestions[i].id}`);
     }
+  }
+  if (examId <= 4) {
+    rwQs.forEach(q => {
+      const tipText = getReadingQuestionTip(q);
+      if (!tipText || typeof tipText !== "string" || tipText.length < 30) {
+        failures.push(`Exam ${examId} ${q.id}: Missing or short question-specific reading tip`);
+      }
+    });
+    mathQs.forEach(q => {
+      if (getReadingQuestionTip(q) !== null) {
+        failures.push(`Exam ${examId} ${q.id}: Math question should not have a reading tip`);
+      }
+    });
   }
   for (const modNum of [1, 2]) {
     const modRw = rwQs.filter(q => q.module === modNum);
