@@ -95,10 +95,43 @@
       color: inherit;
       padding: 1px 3px;
       border-radius: 3px;
+      transition: opacity 0.15s ease;
     }
     .dark mark.user-highlight {
       background-color: #854d0e;
       color: #fef9c3;
+    }
+    mark.user-highlight-yellow {
+      background-color: #fef08a;
+      color: #1e293b;
+    }
+    .dark mark.user-highlight-yellow {
+      background-color: rgba(234, 179, 8, 0.35);
+      color: #fef9c3;
+    }
+    mark.user-highlight-green {
+      background-color: #bbf7d0;
+      color: #064e3b;
+    }
+    .dark mark.user-highlight-green {
+      background-color: rgba(16, 185, 129, 0.35);
+      color: #d1fae5;
+    }
+    mark.user-highlight-blue {
+      background-color: #bae6fd;
+      color: #0c4a6e;
+    }
+    .dark mark.user-highlight-blue {
+      background-color: rgba(14, 165, 233, 0.35);
+      color: #e0f2fe;
+    }
+    mark.user-highlight-pink {
+      background-color: #fbcfe8;
+      color: #831843;
+    }
+    .dark mark.user-highlight-pink {
+      background-color: rgba(236, 72, 153, 0.35);
+      color: #fce7f3;
     }
   </style>
 </head>
@@ -147,7 +180,11 @@
       AlertTriangle: <><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
       Grid: <><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></>,
       Crosshair: <><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/></>,
-      Compass: <><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></>
+      Compass: <><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></>,
+      PenTool: <><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></>,
+      Highlighter: <><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></>,
+      StickyNote: <><path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/><polyline points="15 3 15 9 21 9"/></>,
+      Eraser: <><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></>
     };
 
     function Icon({ name, className = 'w-5 h-5', size = 20 }) {
@@ -206,13 +243,15 @@
       );
     }
 
-    // Safe phrase-based text highlighter that preserves React virtual DOM
-    function renderPassageWithHighlights(text, phrases = []) {
+    // Safe phrase-based text highlighter that preserves React virtual DOM and supports multi-color highlights
+    function renderPassageWithHighlights(text, phrases = [], onRemovePhrase = null) {
       if (!text) return '';
       if (!phrases || phrases.length === 0) return text;
 
       let segments = [text];
-      phrases.forEach((phrase, phraseIdx) => {
+      phrases.forEach((phraseEntry, phraseIdx) => {
+        const phrase = typeof phraseEntry === 'string' ? phraseEntry : (phraseEntry?.text || '');
+        const color = (typeof phraseEntry === 'object' && phraseEntry?.color) ? phraseEntry.color : 'yellow';
         if (!phrase || phrase.trim().length === 0) return;
         const nextSegments = [];
         segments.forEach((seg, segIdx) => {
@@ -236,7 +275,12 @@
             }
             const matchedText = seg.slice(matchIdx, matchIdx + phrase.length);
             nextSegments.push(
-              <mark key={`hl-${phraseIdx}-${segIdx}-${matchIdx}`} className="user-highlight">
+              <mark
+                key={`hl-${phraseIdx}-${segIdx}-${matchIdx}`}
+                onClick={onRemovePhrase ? (e) => { e.stopPropagation(); onRemovePhrase(phraseIdx); } : undefined}
+                title={onRemovePhrase ? "Click to remove highlight" : undefined}
+                className={`user-highlight user-highlight-${color} ${onRemovePhrase ? 'cursor-pointer hover:opacity-75' : ''}`}
+              >
                 {matchedText}
               </mark>
             );
@@ -4103,6 +4147,17 @@
         }));
       };
 
+      const saveCustomNote = (noteKey, noteText) => {
+        if (!noteKey) return;
+        setState(prev => ({
+          ...prev,
+          customNotes: {
+            ...(prev.customNotes || {}),
+            [noteKey]: noteText
+          }
+        }));
+      };
+
       const exportStateJson = () => {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
         const downloadAnchor = document.createElement("a");
@@ -4163,6 +4218,7 @@
         toggleTheme,
         saveExamAttempt,
         recordDrillResult,
+        saveCustomNote,
         exportStateJson,
         importStateJson,
         resetAllData
@@ -4172,6 +4228,476 @@
     // ==========================================
     // 12. IN-EXAM MODALS & TOOLS
     // ==========================================
+
+    // Multi-Color Highlighter Control Bar (Student & Lesson Friendly)
+    const HIGHLIGHT_COLORS = [
+      { id: 'yellow', label: 'Main Idea (Yellow)', bg: 'bg-yellow-300', swatch: 'bg-yellow-300', ring: 'ring-yellow-500' },
+      { id: 'green', label: 'Evidence (Green)', bg: 'bg-emerald-300', swatch: 'bg-emerald-300', ring: 'ring-emerald-500' },
+      { id: 'blue', label: 'Vocab / Key Term (Blue)', bg: 'bg-sky-300', swatch: 'bg-sky-300', ring: 'ring-sky-500' },
+      { id: 'pink', label: 'Contrast / Trap (Pink)', bg: 'bg-pink-300', swatch: 'bg-pink-300', ring: 'ring-pink-500' }
+    ];
+
+    // Interactive Pen, Highlighter Brush & Math Scratchpad (Kalem & Karalama Tahtası)
+    function DrawingScratchpadModal({ isOpen, onClose, contextKey = 'default', contextLabel, contextTitle, drawings: propDrawings, setDrawings: propSetDrawings }) {
+      const resolvedLabel = contextLabel || contextTitle || 'Workspace';
+      const [localDrawings, setLocalDrawings] = React.useState({});
+      const drawings = propDrawings || localDrawings;
+      const setDrawings = propSetDrawings || setLocalDrawings;
+
+      const canvasRef = React.useRef(null);
+      const isDrawingRef = React.useRef(false);
+      const currentStrokeRef = React.useRef(null);
+
+      const [boardMode, setBoardMode] = React.useState('board'); // 'board' (Docked Grid Pad) | 'overlay' (Full Screen Annotation)
+      const [clickThrough, setClickThrough] = React.useState(false);
+      const [tool, setTool] = React.useState('pen'); // 'pen' | 'highlighter' | 'eraser'
+      const [penColor, setPenColor] = React.useState('#4f46e5');
+      const [penWidth, setPenWidth] = React.useState(3);
+
+      const activeStrokes = React.useMemo(() => (drawings && drawings[contextKey]) || [], [drawings, contextKey]);
+
+      const PEN_COLORS = [
+        { hex: '#4f46e5', name: 'Indigo' },
+        { hex: '#e11d48', name: 'Rose Red' },
+        { hex: '#059669', name: 'Emerald' },
+        { hex: '#d97706', name: 'Amber' },
+        { hex: '#0284c7', name: 'Sky Blue' },
+        { hex: '#1e293b', name: 'Dark Slate' }
+      ];
+
+      // Redraw all strokes for active contextKey
+      const redrawCanvas = React.useCallback(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const allStrokes = currentStrokeRef.current ? [...activeStrokes, currentStrokeRef.current] : activeStrokes;
+        allStrokes.forEach(stroke => {
+          if (!stroke.points || stroke.points.length === 0) return;
+          ctx.save();
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          if (stroke.tool === 'eraser') {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = 22;
+            ctx.strokeStyle = 'rgba(0,0,0,1)';
+          } else if (stroke.tool === 'highlighter') {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 0.35;
+            ctx.lineWidth = 18;
+            ctx.strokeStyle = stroke.color || '#eab308';
+          } else {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1.0;
+            ctx.lineWidth = stroke.width || 3;
+            ctx.strokeStyle = stroke.color || '#4f46e5';
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+          for (let i = 1; i < stroke.points.length; i++) {
+            ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+          }
+          if (stroke.points.length === 1) {
+            ctx.lineTo(stroke.points[0].x + 0.5, stroke.points[0].y + 0.5);
+          }
+          ctx.stroke();
+          ctx.restore();
+        });
+      }, [activeStrokes]);
+
+      React.useEffect(() => {
+        if (!isOpen) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const resize = () => {
+          if (!canvas.parentElement) return;
+          const rect = canvas.parentElement.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            redrawCanvas();
+          }
+        };
+        resize();
+        window.addEventListener('resize', resize);
+        return () => window.removeEventListener('resize', resize);
+      }, [isOpen, boardMode, contextKey, redrawCanvas]);
+
+      React.useEffect(() => {
+        if (isOpen) redrawCanvas();
+      }, [isOpen, activeStrokes, redrawCanvas]);
+
+      if (!isOpen) return null;
+
+      const getCoords = (e) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return { x: 0, y: 0 };
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      };
+
+      const handlePointerDown = (e) => {
+        if (boardMode === 'overlay' && clickThrough) return;
+        isDrawingRef.current = true;
+        const pt = getCoords(e);
+        currentStrokeRef.current = {
+          tool,
+          color: penColor,
+          width: penWidth,
+          points: [pt]
+        };
+        redrawCanvas();
+      };
+
+      const handlePointerMove = (e) => {
+        if (!isDrawingRef.current || !currentStrokeRef.current) return;
+        const pt = getCoords(e);
+        currentStrokeRef.current.points.push(pt);
+        redrawCanvas();
+      };
+
+      const handlePointerUp = () => {
+        if (!isDrawingRef.current || !currentStrokeRef.current) return;
+        isDrawingRef.current = false;
+        const finishedStroke = currentStrokeRef.current;
+        currentStrokeRef.current = null;
+        if (setDrawings) {
+          setDrawings(prev => ({
+            ...prev,
+            [contextKey]: [...((prev && prev[contextKey]) || []), finishedStroke]
+          }));
+        }
+      };
+
+      const handleUndo = () => {
+        if (!setDrawings) return;
+        setDrawings(prev => {
+          const list = (prev && prev[contextKey]) || [];
+          return { ...prev, [contextKey]: list.slice(0, -1) };
+        });
+      };
+
+      const handleClear = () => {
+        if (!setDrawings) return;
+        setDrawings(prev => ({ ...prev, [contextKey]: [] }));
+      };
+
+      return (
+        <div
+          className={
+            boardMode === 'overlay'
+              ? `fixed inset-0 z-40 ${clickThrough ? 'pointer-events-none' : ''}`
+              : 'fixed bottom-16 right-4 z-40 w-[92vw] sm:w-[440px] h-[380px] bg-white dark:bg-zinc-900 border-2 border-indigo-500/70 dark:border-indigo-500 rounded-2xl shadow-2xl flex flex-col overflow-hidden'
+          }
+        >
+          {/* Floating Top/Header Toolbar */}
+          <div
+            className={
+              boardMode === 'overlay'
+                ? 'pointer-events-auto fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white border border-slate-700 rounded-2xl px-3.5 py-2 shadow-2xl flex flex-wrap items-center gap-2 max-w-[96vw]'
+                : 'bg-slate-900 text-white px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 shrink-0'
+            }
+          >
+            <div className="flex items-center space-x-1.5">
+              <Icon name="PenTool" className="w-4 h-4 text-indigo-400" />
+              <span className="text-xs font-bold tracking-tight">Kalem & Karalama Tahtası</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono">
+                {resolvedLabel}
+              </span>
+            </div>
+
+            {/* Mode Switcher: Karalama Defteri vs Ekran Üstü Çizim */}
+            <div className="flex items-center bg-slate-800 rounded-lg p-0.5 text-[11px] font-semibold">
+              <button
+                onClick={() => { setBoardMode('board'); setClickThrough(false); }}
+                className={`px-2 py-0.5 rounded-md transition ${boardMode === 'board' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
+                title="Docked Math Grid Scratchpad"
+              >
+                Kareli Tahta
+              </button>
+              <button
+                onClick={() => setBoardMode('overlay')}
+                className={`px-2 py-0.5 rounded-md transition ${boardMode === 'overlay' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
+                title="Draw directly on top of the screen/question"
+              >
+                Ekran Üstü Çiz
+              </button>
+            </div>
+
+            {boardMode === 'overlay' && (
+              <button
+                onClick={() => setClickThrough(prev => !prev)}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
+                  clickThrough
+                    ? 'bg-emerald-600 border-emerald-400 text-white'
+                    : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700'
+                }`}
+                title="When active, you can click answer choices and scroll while keeping your drawings on screen"
+              >
+                {clickThrough ? '👆 Gezinme Modu (Tıklanabilir)' : '✏️ Çizim Modu'}
+              </button>
+            )}
+
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white ml-auto"
+              title="Close Drawing Tool"
+            >
+              <Icon name="X" className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Secondary Tool & Color Controls Bar */}
+          <div
+            className={
+              boardMode === 'overlay'
+                ? 'pointer-events-auto fixed top-28 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white border border-slate-700 rounded-xl px-3 py-1.5 shadow-xl flex flex-wrap items-center gap-2 max-w-[96vw]'
+                : 'bg-slate-100 dark:bg-zinc-950 px-3 py-1.5 border-b border-slate-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 shrink-0 text-xs'
+            }
+          >
+            {/* Tool Selector */}
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={() => { setTool('pen'); setClickThrough(false); }}
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition ${
+                  tool === 'pen' ? 'bg-indigo-600 text-white shadow-xs' : 'hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                }`}
+              >
+                <Icon name="PenTool" className="w-3.5 h-3.5" />
+                <span>Kalem</span>
+              </button>
+              <button
+                onClick={() => { setTool('highlighter'); setClickThrough(false); }}
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition ${
+                  tool === 'highlighter' ? 'bg-amber-500 text-slate-950 shadow-xs' : 'hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                }`}
+              >
+                <Icon name="Highlighter" className="w-3.5 h-3.5" />
+                <span>Fosforlu</span>
+              </button>
+              <button
+                onClick={() => { setTool('eraser'); setClickThrough(false); }}
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition ${
+                  tool === 'eraser' ? 'bg-rose-600 text-white shadow-xs' : 'hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                }`}
+              >
+                <Icon name="Eraser" className="w-3.5 h-3.5" />
+                <span>Silgi</span>
+              </button>
+            </div>
+
+            {/* Color Swatches */}
+            <div className="flex items-center space-x-1.5">
+              {PEN_COLORS.map(c => (
+                <button
+                  key={c.hex}
+                  onClick={() => { setPenColor(c.hex); if (tool === 'eraser') setTool('pen'); }}
+                  title={c.name}
+                  style={{ backgroundColor: c.hex }}
+                  className={`w-4 h-4 rounded-full transition transform ${
+                    penColor === c.hex && tool !== 'eraser' ? 'scale-125 ring-2 ring-offset-1 ring-indigo-400' : 'opacity-80 hover:opacity-100'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Stroke Width & Undo/Clear */}
+            <div className="flex items-center space-x-1.5">
+              {[2, 4, 7].map(w => (
+                <button
+                  key={w}
+                  onClick={() => setPenWidth(w)}
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-mono font-bold ${
+                    penWidth === w ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'
+                  }`}
+                  title={`Thickness ${w}px`}
+                >
+                  {w === 2 ? 'S' : w === 4 ? 'M' : 'L'}
+                </button>
+              ))}
+              <button
+                onClick={handleUndo}
+                className="px-2 py-0.5 rounded bg-slate-200 dark:bg-zinc-800 hover:bg-slate-300 dark:hover:bg-zinc-700 text-[11px] font-semibold text-slate-700 dark:text-zinc-200"
+                title="Undo last stroke"
+              >
+                Geri Al
+              </button>
+              <button
+                onClick={handleClear}
+                className="px-2 py-0.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-[11px] font-semibold text-rose-500 dark:text-rose-400"
+                title="Clear canvas"
+              >
+                Temizle
+              </button>
+            </div>
+          </div>
+
+          {/* Drawing Canvas Area */}
+          <div
+            className="flex-1 relative w-full h-full overflow-hidden"
+            style={
+              boardMode === 'board'
+                ? {
+                    backgroundImage: 'radial-gradient(rgba(99, 102, 241, 0.22) 1px, transparent 1px)',
+                    backgroundSize: '18px 18px'
+                  }
+                : undefined
+            }
+          >
+            <canvas
+              ref={canvasRef}
+              onMouseDown={handlePointerDown}
+              onMouseMove={handlePointerMove}
+              onMouseUp={handlePointerUp}
+              onMouseLeave={handlePointerUp}
+              onTouchStart={handlePointerDown}
+              onTouchMove={handlePointerMove}
+              onTouchEnd={handlePointerUp}
+              className={`w-full h-full block touch-none ${
+                boardMode === 'overlay' && clickThrough ? 'pointer-events-none' : 'cursor-crosshair'
+              }`}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // Student & Lesson Smart Notepad (Soru & Ders Not Defteri)
+    function StudentNotepadModal({ isOpen, onClose, contextKey, contextLabel, activeKey: propActiveKey, activeTitle: propActiveTitle, customNotes = {}, onSaveNote }) {
+      const resolvedKey = contextKey || propActiveKey || 'general';
+      const resolvedLabel = contextLabel || propActiveTitle || 'Current Item';
+      const [noteTab, setNoteTab] = React.useState('item'); // 'item' (Bu Soru/Ders) | 'general' (Genel Ders Notları)
+      const activeKey = noteTab === 'item' ? resolvedKey : '__GENERAL_NOTEBOOK__';
+      const currentText = (customNotes && customNotes[activeKey]) || '';
+
+      if (!isOpen) return null;
+
+      const handleInsertSnippet = (snippet) => {
+        const nextText = currentText ? `${currentText}\n${snippet} ` : `${snippet} `;
+        if (onSaveNote) onSaveNote(activeKey, nextText);
+      };
+
+      const handleDownloadNotes = () => {
+        const entries = Object.entries(customNotes || {}).filter(([_, v]) => v && v.trim());
+        const body = entries.length > 0
+          ? entries.map(([k, v]) => `=== ${k === '__GENERAL_NOTEBOOK__' ? 'GENEL DERS NOTLARI' : k} ===\n${v}\n`).join('\n')
+          : 'Henüz kaydedilmiş not bulunmuyor.';
+        const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bluebook-sat-study-notes-${new Date().toISOString().slice(0, 10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      };
+
+      return (
+        <div className="fixed bottom-16 left-4 sm:left-auto sm:right-4 z-40 w-[92vw] sm:w-96 bg-white dark:bg-zinc-900 border-2 border-amber-500/70 dark:border-amber-500/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          {/* Header */}
+          <div className="bg-amber-500/15 dark:bg-amber-950/70 px-4 py-2.5 border-b border-amber-200 dark:border-amber-800/60 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Icon name="StickyNote" className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <span className="text-xs font-extrabold text-slate-900 dark:text-amber-100">
+                Ders & Soru Not Defteri (Notepad)
+              </span>
+            </div>
+            <div className="flex items-center space-x-1.5">
+              <button
+                onClick={handleDownloadNotes}
+                className="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-[10px] font-bold text-amber-800 dark:text-amber-200 transition"
+                title="Tüm notları .txt olarak indir"
+              >
+                .txt İndir
+              </button>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-amber-500/20 rounded-lg text-slate-500 dark:text-amber-200"
+                title="Close Notepad"
+              >
+                <Icon name="X" className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Tabs: Current Question/Lesson vs General Notebook */}
+          <div className="flex border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 text-xs font-bold">
+            <button
+              onClick={() => setNoteTab('item')}
+              className={`flex-1 py-2 px-3 text-center border-b-2 transition ${
+                noteTab === 'item'
+                  ? 'border-amber-500 text-amber-700 dark:text-amber-400 bg-white dark:bg-zinc-900'
+                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-zinc-200'
+              }`}
+            >
+              📌 Bu Soru / Ders ({resolvedLabel})
+            </button>
+            <button
+              onClick={() => setNoteTab('general')}
+              className={`flex-1 py-2 px-3 text-center border-b-2 transition ${
+                noteTab === 'general'
+                  ? 'border-amber-500 text-amber-700 dark:text-amber-400 bg-white dark:bg-zinc-900'
+                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-zinc-200'
+              }`}
+            >
+              📓 Genel Ders Notları
+            </button>
+          </div>
+
+          {/* Quick Lesson-Friendly Template Chips */}
+          <div className="px-3 py-1.5 bg-amber-50/50 dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 flex flex-wrap gap-1">
+            {[
+              { label: '+ Ana Fikir', text: '• Ana Fikir / İddia:' },
+              { label: '+ Kelime', text: '• Kelime & Anlamı:' },
+              { label: '+ Formül/Kural', text: '• Kural / Formül:' },
+              { label: '+ Tuzak Analizi', text: '• Çeldirici Tuzağı:' }
+            ].map(chip => (
+              <button
+                key={chip.label}
+                onClick={() => handleInsertSnippet(chip.text)}
+                className="px-2 py-0.5 rounded-md bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/80 dark:hover:bg-amber-900 text-amber-800 dark:text-amber-200 text-[10px] font-semibold transition"
+              >
+                {chip.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Textarea */}
+          <div className="p-3 flex-1 flex flex-col">
+            <textarea
+              value={currentText}
+              onChange={(e) => onSaveNote && onSaveNote(activeKey, e.target.value)}
+              placeholder={
+                noteTab === 'item'
+                  ? `Bu soru veya ders (${resolvedLabel}) için ipuçlarını, kelime anlamlarını veya çözüm adımlarını buraya not alabilirsin... (Otomatik kaydedilir)`
+                  : `Genel SAT ders notlarını, önemli kelimeleri ve matematik formüllerini buraya yazabilirsin...`
+              }
+              rows={6}
+              className="w-full p-2.5 rounded-xl bg-amber-50/30 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 text-xs sm:text-sm text-slate-800 dark:text-zinc-100 leading-relaxed focus:outline-none focus:border-amber-500 resize-y font-sans"
+            />
+            <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-400">
+              <span>✓ Tarayıcı hafızasına otomatik kaydedilir</span>
+              {currentText && (
+                <button
+                  onClick={() => onSaveNote && onSaveNote(activeKey, '')}
+                  className="text-rose-500 hover:underline font-semibold"
+                >
+                  Notu Temizle
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     // Math Reference Sheet Modal (Formulas)
     function MathReferenceModal({ isOpen, onClose }) {
@@ -4602,7 +5128,7 @@
     // ==========================================
     // 13. BLUEBOOK PROCTORED TESTING SHELL
     // ==========================================
-    function ExamProctoredShell({ examId, onExitExam, onFinishExam, isHidden = false }) {
+    function ExamProctoredShell({ examId, onExitExam, onFinishExam, isHidden = false, customNotes = {}, onSaveNote = null }) {
       const scaffold = React.useMemo(() => new ExamScaffoldEngine(examId * 9999 + 1337), [examId]);
       const examQuestions = React.useMemo(() => scaffold.generateExam(examId), [examId, scaffold]);
 
@@ -4612,11 +5138,23 @@
       const [answers, setAnswers] = React.useState({});
       const [bookmarks, setBookmarks] = React.useState({});
       const [eliminations, setEliminations] = React.useState({}); // { [qId]: { 'A': true } }
-      const [highlights, setHighlights] = React.useState({}); // { [qId]: ['phrase'] }
+      const [highlights, setHighlights] = React.useState({}); // { [qId]: [{ text, color } | 'phrase'] }
       const [timeSpent, setTimeSpent] = React.useState({}); // { [qId]: seconds }
       const [qEnterTime, setQEnterTime] = React.useState(Date.now());
 
-      // Timing state: 32m for RW, 35m for Math
+      // Practice Mode (Untimed by default — no mandatory countdown!)
+      const [isPracticeMode, setIsPracticeMode] = React.useState(true);
+      const [practiceElapsed, setPracticeElapsed] = React.useState(0);
+      const [showPracticeSolution, setShowPracticeSolution] = React.useState(false);
+
+      // Student & Lesson Friendly Tools State
+      const [highlightColor, setHighlightColor] = React.useState('yellow');
+      const [autoHighlight, setAutoHighlight] = React.useState(true);
+      const [isDrawOpen, setIsDrawOpen] = React.useState(false);
+      const [drawings, setDrawings] = React.useState({});
+      const [isNotepadOpen, setIsNotepadOpen] = React.useState(false);
+
+      // Timing state: 32m for RW, 35m for Math (used only if user switches from Practice Mode to Timed Mode)
       const [timeRemaining, setTimeRemaining] = React.useState(32 * 60);
       const [isTimerHidden, setIsTimerHidden] = React.useState(false);
       const [isPaused, setIsPaused] = React.useState(false);
@@ -4656,6 +5194,7 @@
 
       React.useEffect(() => {
         setIsTipOpen(false);
+        setShowPracticeSolution(false);
       }, [activeQ?.id, stage, examId]);
 
       // Track time spent on question transitions
@@ -4672,14 +5211,21 @@
 
       const handleModuleSubmitRef = React.useRef(null);
 
-      // Timer interval
+      // Timer interval (Untimed in Practice Mode; optional countdown only if Timed Mode is toggled)
       React.useEffect(() => {
-        if (isPaused || isHidden || stage === 'break') return;
+        if (isPaused || stage === 'break') return;
+        if (isHidden) return;
+
+        if (isPracticeMode) {
+          const practiceInterval = setInterval(() => {
+            setPracticeElapsed(prev => prev + 1);
+          }, 1000);
+          return () => clearInterval(practiceInterval);
+        }
 
         const interval = setInterval(() => {
           setTimeRemaining(prev => {
-            if (prev <= 1) {
-              clearInterval(interval);
+            if (prev <= 1) { clearInterval(interval); handleModuleSubmit();
               setTimeout(() => {
                 if (handleModuleSubmitRef.current) handleModuleSubmitRef.current();
               }, 0);
@@ -4696,7 +5242,7 @@
         }, 1000);
 
         return () => clearInterval(interval);
-      }, [isPaused, isHidden, stage]);
+      }, [isPaused, isHidden, isPracticeMode, stage]);
 
       // Module Transition Logic
       const handleModuleSubmit = () => {
@@ -4965,23 +5511,38 @@
         return () => window.removeEventListener('keydown', handleKeyDown);
       }, [activeQ, currentQIndex, currentModuleQuestions, answers, isReviewOpen, isCalcOpen, isRefOpen, isPaused, isHidden, stage, handleNext, handlePrev, handleAnswerSelect]);
 
-      const handleAddHighlight = () => {
+      const handleAddHighlight = (customColor = highlightColor) => {
         if (!activeQ) return;
-        const selected = window.getSelection().toString().trim();
-        if (selected.length > 2) {
+        const selected = window.getSelection ? window.getSelection().toString().trim() : '';
+        if (selected.length > 1) {
           setHighlights(prev => {
             const list = prev[activeQ.id] || [];
-            if (!list.includes(selected)) {
-              return { ...prev, [activeQ.id]: [...list, selected] };
+            const exists = list.some(item => (typeof item === 'string' ? item : item.text) === selected);
+            if (!exists) {
+              return { ...prev, [activeQ.id]: [...list, { text: selected, color: customColor }] };
             }
             return prev;
           });
+          if (window.getSelection) window.getSelection().removeAllRanges();
         }
+      };
+
+      const handleRemoveSingleHighlight = (phraseIdxOrText) => {
+        if (!activeQ) return;
+        setHighlights(prev => {
+          const list = prev[activeQ.id] || [];
+          return {
+            ...prev,
+            [activeQ.id]: list.filter((item, i) =>
+              i !== phraseIdxOrText && (typeof item === 'string' ? item : item.text) !== phraseIdxOrText
+            )
+          };
+        });
       };
 
       const handleClearHighlights = () => {
         if (!activeQ) return;
-        setHighlights(prev => ({ ...prev, [activeQ.id]: [] }));
+        setHighlights(prev => ({ ...prev, [activeQ?.id]: [] }));
       };
 
       if (stage === 'break') {
@@ -5001,80 +5562,148 @@
       const secs = timeRemaining % 60;
       const formattedTime = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
+      const elapsedMins = Math.floor(practiceElapsed / 60);
+      const elapsedSecs = practiceElapsed % 60;
+      const formattedElapsed = `${String(elapsedMins).padStart(2, '0')}:${String(elapsedSecs).padStart(2, '0')}`;
+
       const answeredCount = currentModuleQuestions.filter(q => answers[q.id] !== undefined && answers[q.id] !== "").length;
       const flaggedCount = currentModuleQuestions.filter(q => bookmarks[q.id]).length;
       const isMath = activeQ?.section === 'math';
+      const hasNoteForActiveQ = !!(activeQ && customNotes && customNotes[activeQ.id] && customNotes[activeQ.id].trim());
+      const hasDrawingForActiveQ = !!(activeQ && drawings && drawings[activeQ.id] && drawings[activeQ.id].length > 0);
 
       return (
         <div className="h-full flex flex-col bg-slate-100 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-          {/* Proctored Header */}
-          <header className="h-14 bg-slate-900 text-white flex items-center justify-between px-4 sm:px-6 border-b border-slate-800 shrink-0">
-            <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Proctored / Practice Header */}
+          <header className="min-h-14 py-1.5 bg-slate-900 text-white flex flex-wrap items-center justify-between px-4 sm:px-6 border-b border-slate-800 shrink-0 gap-2">
+            <div className="flex flex-wrap items-center space-x-2 sm:space-x-3">
               <span className="font-bold tracking-tight text-sm uppercase text-indigo-400">
                 Mock Exam {examId}
               </span>
               <span className="text-slate-500">|</span>
-              <span className="text-sm font-medium text-slate-200">
+              <span className="text-xs sm:text-sm font-medium text-slate-200">
                 {stage === 'rw-m1' && "Section 1: Reading & Writing — Module 1"}
                 {stage === 'rw-m2' && `Section 1: Reading & Writing — Module 2 (${rwTier === 'hard' ? 'Hard Tier' : 'Standard Tier'})`}
                 {stage === 'math-m1' && "Section 2: Math — Module 1"}
                 {stage === 'math-m2' && `Section 2: Math — Module 2 (${mathTier === 'hard' ? 'Hard Tier' : 'Standard Tier'})`}
               </span>
+
+              {/* Quick Module Jump Tabs in Practice Mode */}
+              {isPracticeMode && (
+                <div className="hidden lg:flex items-center space-x-1 bg-slate-800/90 p-0.5 rounded-lg border border-slate-700 ml-2">
+                  {[
+                    { id: 'rw-m1', label: 'RW M1' },
+                    { id: 'rw-m2', label: 'RW M2' },
+                    { id: 'math-m1', label: 'Math M1' },
+                    { id: 'math-m2', label: 'Math M2' }
+                  ].map(mTab => (
+                    <button
+                      key={mTab.id}
+                      onClick={() => {
+                        recordTimeForActiveQ();
+                        setStage(mTab.id);
+                        setCurrentQIndex(0);
+                      }}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold transition ${
+                        stage === mTab.id
+                          ? 'bg-indigo-600 text-white shadow-xs'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                      title={`Jump directly to ${mTab.label} (Practice Mode)`}
+                    >
+                      {mTab.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Central Countdown Timer */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <span className="hidden xl:inline-flex items-center space-x-1.5 text-[11px] text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-lg border border-slate-700/60 font-mono">
-                <span>[A-D] Select</span>
-                <span>•</span>
-                <span>[←/→] Navigate</span>
-                <span>•</span>
-                <span>[Esc] Modal</span>
-              </span>
-              <div className="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
-                <Icon name="Clock" className="w-4 h-4 text-slate-300" />
-                <span className={`font-mono font-bold text-sm ${timeRemaining < 300 ? 'text-amber-400' : 'text-white'}`}>
-                  {isTimerHidden ? "Timer Hidden" : formattedTime}
+            {/* Central Practice Mode / Optional Timer Bar */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setIsPracticeMode(prev => !prev)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold border flex items-center space-x-1.5 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                  isPracticeMode
+                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/30'
+                    : 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500/30'
+                }`}
+                title="Toggle between Untimed Practice Mode (No Time Limit) and Optional Countdown Timer"
+              >
+                <span>{isPracticeMode ? '🌱 Practice Mode (Süresiz)' : '⏱️ Timed Mode'}</span>
+              </button>
+
+              <div className="flex items-center space-x-2 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700">
+                <Icon name="Clock" className="w-3.5 h-3.5 text-slate-300" />
+                <span className={`font-mono font-bold text-xs sm:text-sm ${!isPracticeMode && timeRemaining < 300 ? 'text-amber-400' : 'text-white'}`}>
+                  {isTimerHidden ? "Timer Hidden" : (isPracticeMode ? `∞ (${formattedElapsed})` : formattedTime)}
                 </span>
                 <button
                   onClick={() => setIsTimerHidden(!isTimerHidden)}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 ml-1 underline focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none rounded"
+                  className="text-[11px] text-indigo-400 hover:text-indigo-300 ml-1 underline focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none rounded"
                 >
                   {isTimerHidden ? "Show" : "Hide"}
                 </button>
               </div>
 
-              <button
-                onClick={handlePause}
-                className="px-2.5 py-1 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
-              >
-                Pause
-              </button>
+              {!isPracticeMode && (
+                <button
+                  onClick={handlePause}
+                  className="px-2.5 py-1 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+                >
+                  Pause
+                </button>
+              )}
             </div>
 
-            {/* In-Exam Tools */}
-            <div className="flex items-center space-x-2">
+            {/* Student & Lesson Tools: Pen, Notepad, Calculator, Reference, Exit */}
+            <div className="flex items-center space-x-1.5 sm:space-x-2">
+              <button
+                onClick={() => setIsDrawOpen(prev => !prev)}
+                className={`flex items-center space-x-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                  isDrawOpen || hasDrawingForActiveQ
+                    ? 'bg-indigo-600 text-white border-indigo-500'
+                    : 'bg-slate-800 hover:bg-slate-700 text-indigo-300 border-slate-700'
+                }`}
+                title="Open Pen, Highlighter Brush & Scratchpad (Kalem & Tahta)"
+              >
+                <Icon name="PenTool" className="w-3.5 h-3.5" />
+                <span>Kalem</span>
+              </button>
+
+              <button
+                onClick={() => setIsNotepadOpen(prev => !prev)}
+                className={`flex items-center space-x-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                  isNotepadOpen || hasNoteForActiveQ
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold'
+                    : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border-slate-700'
+                }`}
+                title="Open Question & Lesson Notepad (Not Defteri)"
+              >
+                <Icon name="StickyNote" className="w-3.5 h-3.5" />
+                <span>Notepad{hasNoteForActiveQ ? ' •' : ''}</span>
+              </button>
+
               {isMath && (
                 <>
                   <button
                     onClick={() => setIsCalcOpen(true)}
-                    className="flex items-center space-x-1 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded-lg border border-slate-700 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+                    className="flex items-center space-x-1 px-2.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded-lg border border-slate-700 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
                   >
-                    <Icon name="Calculator" className="w-4 h-4" />
-                    <span>Calculator</span>
+                    <Icon name="Calculator" className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Calculator</span>
                   </button>
                   <button
                     onClick={() => setIsRefOpen(true)}
-                    className="flex items-center space-x-1 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded-lg border border-slate-700 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+                    className="flex items-center space-x-1 px-2.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded-lg border border-slate-700 transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
                   >
-                    <Icon name="Award" className="w-4 h-4" />
-                    <span>Reference</span>
+                    <Icon name="Award" className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Reference</span>
                   </button>
                 </>
               )}
               <button
                 onClick={onExitExam}
-                className="px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-rose-400 rounded-lg transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
+                className="px-2.5 py-1.5 text-xs font-medium text-slate-400 hover:text-rose-400 rounded-lg transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
               >
                 Exit Test
               </button>
@@ -5094,34 +5723,69 @@
             {/* Left Pane: Stimulus / Passage (if present) */}
             {activeQ?.passage && (
               <div className="w-1/2 border-r border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 flex flex-col">
-                <div className="h-9 px-4 sm:px-5 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400 bg-slate-50 dark:bg-zinc-900">
+                <div className="min-h-[36px] py-1 px-4 sm:px-5 border-b border-slate-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-zinc-400 bg-slate-50 dark:bg-zinc-900">
                   <span className="font-semibold uppercase tracking-wider text-[11px]">Passage / Stimulus</span>
-                  <div className="flex items-center space-x-2.5">
+                  <div className="flex flex-wrap items-center space-x-1.5">
+                    {/* Multi-Color Highlighter Swatches */}
+                    <div className="flex items-center space-x-1 bg-white dark:bg-zinc-800 px-1.5 py-0.5 rounded-lg border border-slate-200 dark:border-zinc-700" role="group" aria-label="Highlighter color picker">
+                      <Icon name="Highlighter" className="w-3.5 h-3.5 text-amber-500 mr-0.5" />
+                      {HIGHLIGHT_COLORS.map(hc => (
+                        <button
+                          key={hc.id}
+                          onClick={() => {
+                            setHighlightColor(hc.id);
+                            handleAddHighlight(hc.id);
+                          }}
+                          title={`${hc.label} — Select text & click to highlight`}
+                          aria-label={`Highlight ${hc.label}`}
+                          className={`w-4 h-4 rounded-full ${hc.swatch} transition transform ${
+                            highlightColor === hc.id ? 'ring-2 ring-indigo-600 dark:ring-indigo-400 scale-110' : 'opacity-75 hover:opacity-100'
+                          }`}
+                        />
+                      ))}
+                    </div>
                     <button
-                      onClick={handleAddHighlight}
+                      onClick={() => handleAddHighlight(highlightColor)}
                       className="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-900 text-amber-800 dark:text-amber-200 font-medium transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
-                      title="Select text and click to highlight"
+                      title="Select text in passage and click to highlight"
                     >
                       Highlight
                     </button>
                     <button
+                      onClick={() => setAutoHighlight(prev => !prev)}
+                      className={`px-2 py-0.5 rounded font-semibold transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                        autoHighlight
+                          ? 'bg-indigo-600 text-white shadow-xs'
+                          : 'bg-slate-200/70 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 hover:bg-slate-300/70'
+                      }`}
+                      title="Auto-Highlight: When enabled, simply selecting text with your mouse automatically highlights it!"
+                    >
+                      {autoHighlight ? '✨ Auto: ON' : 'Auto'}
+                    </button>
+                    <button
                       onClick={handleClearHighlights}
-                      className="hover:text-slate-800 dark:hover:text-zinc-200 transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+                      className="hover:text-rose-600 dark:hover:text-rose-400 transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none px-1"
+                      title="Clear all highlights in this passage"
                     >
                       Clear
                     </button>
-                    <span className="text-slate-300">|</span>
+                    <span className="text-slate-300 dark:text-zinc-700">|</span>
                     <button onClick={() => setFontSize(prev => Math.max(13, prev - 1))} className="px-1 font-bold active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none rounded">A-</button>
                     <button onClick={() => setFontSize(prev => Math.min(22, prev + 1))} className="px-1 font-bold active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none rounded">A+</button>
                   </div>
                 </div>
 
                 <div
+                  onMouseUp={() => {
+                    if (autoHighlight) {
+                      handleAddHighlight(highlightColor);
+                    }
+                  }}
                   className="flex-1 p-5 sm:p-6 overflow-y-auto font-serif leading-relaxed text-slate-800 dark:text-zinc-200 select-text"
                   style={{ fontSize: `${fontSize}px` }}
                 >
                   <p className="whitespace-pre-line">
-                    {renderPassageWithHighlights(activeQ.passage, highlights[activeQ.id] || [])}
+                    {renderPassageWithHighlights(activeQ.passage, highlights[activeQ.id] || [], handleRemoveSingleHighlight)}
                   </p>
                 </div>
               </div>
@@ -5130,11 +5794,24 @@
             {/* Right Pane: Question & Options / SPR Grid-In */}
             <div className={`${activeQ?.passage ? 'w-1/2' : 'w-full max-w-4xl mx-auto'} bg-slate-50 dark:bg-zinc-950 flex flex-col`}>
               <div className="h-9 px-4 sm:px-6 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-900">
-                <span className="font-bold text-slate-800 dark:text-zinc-200">
-                  Question {currentQIndex + 1} of {currentModuleQuestions.length}
-                </span>
-
                 <div className="flex items-center space-x-2">
+                  <span className="font-bold text-slate-800 dark:text-zinc-200">
+                    Question {currentQIndex + 1} of {currentModuleQuestions.length}
+                  </span>
+                  {activeQ?.difficulty && (
+                    <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[10px] ${
+                      activeQ.difficulty === 'hard'
+                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300'
+                        : activeQ.difficulty === 'medium'
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300'
+                        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300'
+                    }`}>
+                      {activeQ.difficulty}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-1.5 sm:space-x-2">
                   {isEasyMock && isReadingQuestion && activeTip && (
                     <button
                       onClick={() => setIsTipOpen(prev => !prev)}
@@ -5148,6 +5825,22 @@
                     >
                       <Icon name="Zap" className="w-3.5 h-3.5" />
                       <span>{isTipOpen ? 'Hide Tip' : 'Tip'}</span>
+                    </button>
+                  )}
+
+                  {isPracticeMode && (
+                    <button
+                      onClick={() => setShowPracticeSolution(prev => !prev)}
+                      aria-expanded={showPracticeSolution}
+                      className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                        showPracticeSolution
+                          ? 'bg-indigo-600 text-white shadow-xs'
+                          : 'bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60'
+                      }`}
+                      title="Practice Mode: View instant answer & step-by-step explanation"
+                    >
+                      <Icon name="Eye" className="w-3.5 h-3.5" />
+                      <span>{showPracticeSolution ? 'Hide Solution' : 'Solution'}</span>
                     </button>
                   )}
 
@@ -5279,6 +5972,74 @@
                     </p>
                   </div>
                 )}
+
+                {/* Practice Mode Lesson-Friendly Instant Solution & Tool Bar */}
+                {isPracticeMode && (
+                  <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-zinc-800/80">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => setShowPracticeSolution(prev => !prev)}
+                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                          showPracticeSolution
+                            ? 'bg-indigo-600 text-white shadow-sm'
+                            : 'bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+                        }`}
+                      >
+                        <Icon name="CheckCircle" className="w-4 h-4" />
+                        <span>{showPracticeSolution ? 'Cevabı & Çözümü Gizle (Hide Solution)' : 'Cevabı & Çözümü Gör (Check Answer)'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => setIsDrawOpen(prev => !prev)}
+                        className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 transition active:scale-[0.98]"
+                      >
+                        <Icon name="PenTool" className="w-3.5 h-3.5" />
+                        <span>Kalem / Karalama Tahtası</span>
+                      </button>
+
+                      <button
+                        onClick={() => setIsNotepadOpen(prev => !prev)}
+                        className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 transition active:scale-[0.98]"
+                      >
+                        <Icon name="StickyNote" className="w-3.5 h-3.5" />
+                        <span>Bu Soruya Not Al</span>
+                      </button>
+                    </div>
+
+                    {showPracticeSolution && activeQ && (
+                      <div className="mt-3.5 p-4 rounded-2xl bg-white dark:bg-zinc-900 border-2 border-indigo-200 dark:border-indigo-900/70 shadow-sm">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold text-xs">
+                              Doğru Cevap (Correct Answer): {activeQ.correctAnswer}
+                            </span>
+                            {answers[activeQ.id] && (
+                              <span className={`text-xs font-bold ${
+                                (activeQ.options
+                                  ? answers[activeQ.id] === activeQ.correctAnswer
+                                  : evaluateGridIn(answers[activeQ.id], activeQ.correctAnswer).isCorrect)
+                                  ? 'text-emerald-600 dark:text-emerald-400'
+                                  : 'text-rose-600 dark:text-rose-400'
+                              }`}>
+                                {(activeQ.options
+                                  ? answers[activeQ.id] === activeQ.correctAnswer
+                                  : evaluateGridIn(answers[activeQ.id], activeQ.correctAnswer).isCorrect)
+                                  ? '✓ Seçiminiz Doğru!'
+                                  : `✗ Seçiminiz: ${answers[activeQ.id]}`}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] font-mono text-slate-400">
+                            {activeQ.domain} • {activeQ.questionType}
+                          </span>
+                        </div>
+                        <div className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 leading-relaxed mt-2">
+                          <MathRenderer content={activeQ.explanation} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -5340,6 +6101,24 @@
           <MathReferenceModal
             isOpen={isRefOpen}
             onClose={() => setIsRefOpen(false)}
+          />
+
+          <DrawingScratchpadModal
+            isOpen={isDrawOpen}
+            onClose={() => setIsDrawOpen(false)}
+            contextKey={activeQ?.id || stage}
+            contextLabel={`Mock ${examId} • Q${currentQIndex + 1}`}
+            drawings={drawings}
+            setDrawings={setDrawings}
+          />
+
+          <StudentNotepadModal
+            isOpen={isNotepadOpen}
+            onClose={() => setIsNotepadOpen(false)}
+            contextKey={activeQ?.id || 'general'}
+            contextLabel={`Mock ${examId} • Q${currentQIndex + 1} (${activeQ?.domain || 'SAT'})`}
+            customNotes={customNotes}
+            onSaveNote={onSaveNote}
           />
 
           <PauseModal
@@ -5644,11 +6423,39 @@
 
       const [localAnswers, setLocalAnswers] = React.useState({});
       const [localSubmitted, setLocalSubmitted] = React.useState({});
+      const [drillHighlights, setDrillHighlights] = React.useState({});
+      const [activeHighlightColor, setActiveHighlightColor] = React.useState('yellow');
 
       const selectedAnswers = externalAnswers || localAnswers;
       const setSelectedAnswers = setExternalAnswers || setLocalAnswers;
       const submitted = externalSubmitted || localSubmitted;
       const setSubmitted = setExternalSubmitted || setLocalSubmitted;
+
+      const handleDrillHighlight = (drillId, colorOverride) => {
+        const sel = window.getSelection();
+        if (!sel) return;
+        const text = sel.toString().trim();
+        if (text.length < 2) return;
+        const chosenColor = colorOverride || activeHighlightColor || 'yellow';
+        setDrillHighlights(prev => {
+          const curr = prev[drillId] || [];
+          const filtered = curr.filter(item => (typeof item === 'string' ? item : item.text) !== text);
+          return {
+            ...prev,
+            [drillId]: [...filtered, { text, color: chosenColor }]
+          };
+        });
+        sel.removeAllRanges();
+      };
+
+      const handleRemoveDrillHighlight = (drillId, phraseIdxOrText) => {
+        setDrillHighlights(prev => ({
+          ...prev,
+          [drillId]: (prev[drillId] || []).filter((item, idx) =>
+            idx !== phraseIdxOrText && (typeof item === 'string' ? item : item.text) !== phraseIdxOrText
+          )
+        }));
+      };
 
       // Filtered Drills Pool
       const filteredDrills = React.useMemo(() => {
@@ -5682,11 +6489,11 @@
             <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/60 dark:border-indigo-800/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-2">
               <span>🎯 Targeted Skill Building</span>
               <span>•</span>
-              <span>Instant Feedback</span>
+              <span>Instant Feedback & Multi-Color Highlighter</span>
             </div>
             <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Question-Type Practice Drills</h1>
             <p className="text-sm text-slate-600 dark:text-zinc-400 mt-1">
-              Practice at your own pace with low stakes and immediate mentor rationales. Focus on building consistency and spotting distractor patterns.
+              Practice at your own pace with low stakes and immediate mentor rationales. Select any text in a passage to highlight key evidence or use the top Kalem & Notepad tools!
             </p>
           </div>
 
@@ -5724,6 +6531,22 @@
               <option value="hard">Hard</option>
             </select>
 
+            {/* Drill Highlighter Color Picker */}
+            <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-zinc-800 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-zinc-700 text-xs">
+              <Icon name="Highlighter" className="w-3.5 h-3.5 text-amber-500" />
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-zinc-300">Auto-Highlight:</span>
+              {HIGHLIGHT_COLORS.map(hc => (
+                <button
+                  key={hc.id}
+                  onClick={() => setActiveHighlightColor(hc.id)}
+                  title={hc.label}
+                  className={`w-4 h-4 rounded-full ${hc.swatch} transition ${
+                    activeHighlightColor === hc.id ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-70 hover:opacity-100'
+                  }`}
+                />
+              ))}
+            </div>
+
             <span className="text-xs text-slate-500 ml-auto font-medium">
               Showing {filteredDrills.length} items
             </span>
@@ -5742,18 +6565,36 @@
                     <span className="font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                       Drill #{idx + 1} • {drill.questionType.replace(/-/g, ' ')}
                     </span>
-                    <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[10px] ${
-                      drill.difficulty === 'hard' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300' :
-                      drill.difficulty === 'medium' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' :
-                      'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                    }`}>
-                      {drill.difficulty}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      {(drillHighlights[drill.id] || []).length > 0 && (
+                        <button
+                          onClick={() => setDrillHighlights(prev => ({ ...prev, [drill.id]: [] }))}
+                          className="text-[11px] text-slate-400 hover:text-rose-500 transition"
+                        >
+                          Clear Highlights
+                        </button>
+                      )}
+                      <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[10px] ${
+                        drill.difficulty === 'hard' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300' :
+                        drill.difficulty === 'medium' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' :
+                        'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                      }`}>
+                        {drill.difficulty}
+                      </span>
+                    </div>
                   </div>
 
                   {drill.passage && (
-                    <div className="p-3.5 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-zinc-800 text-sm font-serif leading-relaxed text-slate-800 dark:text-zinc-200 mb-3.5 whitespace-pre-line">
-                      {drill.passage}
+                    <div
+                      onMouseUp={() => handleDrillHighlight(drill.id, activeHighlightColor)}
+                      className="p-3.5 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-zinc-800 text-sm font-serif leading-relaxed text-slate-800 dark:text-zinc-200 mb-3.5 whitespace-pre-line select-text"
+                      title="Select any text with your mouse to highlight it!"
+                    >
+                      {renderPassageWithHighlights(
+                        drill.passage,
+                        drillHighlights[drill.id] || [],
+                        (phrase) => handleRemoveDrillHighlight(drill.id, phrase)
+                      )}
                     </div>
                   )}
 
@@ -5841,12 +6682,14 @@
             <div className="absolute top-0 right-0 -mt-6 -mr-6 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
               <div className="max-w-xl">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-indigo-200 text-xs font-semibold mb-2.5">
-                  <span>✨ Real Test-Day Conditions & Progressive Rigor</span>
+                <div className="inline-flex flex-wrap items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-indigo-200 text-xs font-semibold mb-2.5">
+                  <span>✨ Practice Mode (Süre Zorunluluğu Yok / Untimed)</span>
+                  <span>•</span>
+                  <span>✏️ Kalem, Highlighter & Notepad</span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Full-Length Adaptive Mock Exams</h1>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Full-Length Practice & Lesson Mock Exams</h1>
                 <p className="text-indigo-100/80 text-xs sm:text-sm mt-2 leading-relaxed">
-                  Practice with genuine Digital SAT timing, dual-module adaptive routing, integrated Desmos calculator, and 400–1600 scaled scoring. Calibrated from foundational diagnostic up to 1550+ extreme gauntlets.
+                  All 10 exams open in <strong>Student & Lesson Practice Mode (Untimed)</strong> by default—jump freely between modules, check instant step-by-step solutions, draw with the <strong>Kalem / Karalama Tahtası</strong>, highlight passages in 4 colors, and take persistent notes in the <strong>Notepad</strong>. Optional Timed Mode is always 1 click away.
                 </p>
               </div>
               <div className="shrink-0">
@@ -5859,7 +6702,7 @@
                   }`}
                 >
                   <Icon name="Play" className={`w-4 h-4 fill-current ${activeExamId ? 'text-slate-900' : 'text-indigo-600'}`} />
-                  <span>{activeExamId ? `Resume Mock ${activeExamId}` : "Start Mock 1 (Diagnostic)"}</span>
+                  <span>{activeExamId ? `Resume Mock ${activeExamId}` : "Start Mock 1 (Practice Mode)"}</span>
                 </button>
               </div>
             </div>
@@ -5869,10 +6712,10 @@
           <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div className="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/40">
               <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-400 text-xs font-bold mb-1">
-                <span>🌱 Core Mastery (Mocks 1–4)</span>
+                <span>🌱 Core Mastery (Mocks 1–4) + TR Tips</span>
               </div>
               <p className="text-[11px] text-emerald-900/80 dark:text-emerald-300/80 leading-relaxed">
-                Calibrated official Bluebook baseline. Perfect for establishing initial timing, building stamina, and mastering core mechanics (~32% Hard).
+                Calibrated official Bluebook baseline (~32% Hard). Includes Reading Strategy Tips & Turkish Vocabulary Meanings (`Tip` button) + Untimed Practice Mode.
               </p>
             </div>
             <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/40">
@@ -5976,12 +6819,12 @@
                       {tierBadge.desc}
                     </p>
 
-                    <div className="flex items-center space-x-4 text-xs text-slate-500 dark:text-zinc-400 mb-5 font-mono">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-zinc-400 mb-5 font-mono">
                       <span>98 Questions</span>
                       <span>•</span>
-                      <span>134 Minutes</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">∞ Untimed Practice</span>
                       <span>•</span>
-                      <span>2 Sections</span>
+                      <span>Kalem & Notepad</span>
                     </div>
                   </div>
 
@@ -6487,6 +7330,7 @@
         toggleTheme,
         saveExamAttempt,
         recordDrillResult,
+        saveCustomNote,
         exportStateJson,
         importStateJson,
         resetAllData
@@ -6497,6 +7341,8 @@
       const [activeExamId, setActiveExamId] = React.useState(null);
       const [targetLessonDomain, setTargetLessonDomain] = React.useState(null);
       const [targetDrillDomain, setTargetDrillDomain] = React.useState(null);
+      const [isGlobalPenOpen, setIsGlobalPenOpen] = React.useState(false);
+      const [isGlobalNotepadOpen, setIsGlobalNotepadOpen] = React.useState(false);
 
       // Lifted drill state to guarantee zero-reload state preservation across tab switches
       const [drillAnswers, setDrillAnswers] = React.useState({});
@@ -6542,6 +7388,8 @@
                 isHidden={currentView !== 'exam'}
                 onExitExam={handleExitExam}
                 onFinishExam={handleFinishExam}
+                customNotes={state.customNotes}
+                onSaveNote={saveCustomNote}
               />
             </div>
           )}
@@ -6600,8 +7448,36 @@
                 })}
               </div>
 
-              {/* Right: Theme Toggle & Quick Launch / Resume Mock */}
-              <div className="flex items-center space-x-2 sm:space-x-3">
+              {/* Right: Lesson/Student Tools, Theme Toggle & Quick Launch / Resume Mock */}
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                <button
+                  onClick={() => setIsGlobalPenOpen(prev => !prev)}
+                  title="Kalem & Karalama Tahtası (Pen & Scratchpad)"
+                  aria-label="Open Pen and Scratchpad"
+                  className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                    isGlobalPenOpen
+                      ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
+                      : 'bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 hover:bg-amber-100'
+                  }`}
+                >
+                  <Icon name="PenTool" className="w-3.5 h-3.5" />
+                  <span className="hidden lg:inline">Kalem</span>
+                </button>
+
+                <button
+                  onClick={() => setIsGlobalNotepadOpen(prev => !prev)}
+                  title="Öğrenci & Ders Not Defteri (Notepad)"
+                  aria-label="Open Student and Lesson Notepad"
+                  className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                    isGlobalNotepadOpen
+                      ? 'bg-emerald-500 text-slate-950 font-bold shadow-xs'
+                      : 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 hover:bg-emerald-100'
+                  }`}
+                >
+                  <Icon name="StickyNote" className="w-3.5 h-3.5" />
+                  <span className="hidden lg:inline">Notepad</span>
+                </button>
+
                 <button
                   onClick={toggleTheme}
                   title="Toggle Light / Dark Mode"
@@ -6709,6 +7585,22 @@
               />
             )}
           </main>
+
+          {/* Global Student & Lesson Tools (Available in Lessons, Drills, Mocks Hub & Analytics) */}
+          <DrawingScratchpadModal
+            isOpen={isGlobalPenOpen}
+            onClose={() => setIsGlobalPenOpen(false)}
+            contextTitle={`Bluebook SAT • ${currentView.toUpperCase()}`}
+          />
+
+          <StudentNotepadModal
+            isOpen={isGlobalNotepadOpen}
+            onClose={() => setIsGlobalNotepadOpen(false)}
+            activeKey={`view-${currentView}-${targetLessonDomain || targetDrillDomain || 'main'}`}
+            activeTitle={`Ders / Çalışma Notu (${currentView.toUpperCase()})`}
+            customNotes={state.customNotes}
+            onSaveNote={saveCustomNote}
+          />
         </div>
       );
     }
