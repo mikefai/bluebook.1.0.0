@@ -425,6 +425,17 @@ for (let examId = 1; examId <= 10; examId++) {
       if (!tipText || typeof tipText !== "string" || tipText.length < 30) {
         failures.push(`Exam ${examId} ${q.id}: Missing or short question-specific reading tip`);
       }
+      if (q.questionType === "words-in-context") {
+        if (!tipText.includes("Kelime Anlamları (TR):")) {
+          failures.push(`Exam ${examId} ${q.id}: Vocabulary question tip missing Turkish meanings`);
+        }
+        q.options.forEach(optStr => {
+          const word = optStr.replace(/^[A-D]\)\s*/, "").trim();
+          if (!tipText.includes(`${word}: `)) {
+            failures.push(`Exam ${examId} ${q.id}: Missing Turkish translation for vocab option '${word}'`);
+          }
+        });
+      }
     });
     mathQs.forEach(q => {
       if (getReadingQuestionTip(q) !== null) {

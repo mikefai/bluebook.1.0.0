@@ -2357,16 +2357,114 @@
       "m1-rw2-27": "The goal is to 'explain how researchers distinguish between different sperm whale social clans'—pick the option that connects towed hydrophone recordings to each clan's unique rhythmic coda dialect."
     };
 
+    const VOCAB_TURKISH_MEANINGS = {
+      // Mock 1 Vocabulary Words & Distractors
+      "barren": "çorak, verimsiz",
+      "lucrative": "kârlı, kazançlı",
+      "verdant": "yemyeşil, bitki örtüsüyle kaplı",
+      "secluded": "tenha, gözden uzak, izole",
+      "unvarnished": "yalın, saklanmamış, tüm çıplaklığıyla açık",
+      "curated": "özenle seçilip ayıklanmış, filtrelenmiş",
+      "disseminated": "yayılmış, dağıtılmış",
+      "ratified": "resmen onaylanmış, tasdik edilmiş",
+      "sanctification": "kutsama, kutsal kılma",
+      "replication": "birebir kopyalama, çoğaltma",
+      "subversion": "yerleşik kuralları yıkma, altüst etme",
+      "codification": "kuralları sistemleştirme, yasalaştırma",
+      "precarious": "tehlikeli, güvensiz, istikrarsız",
+      "negligible": "ihmal edilebilir, önemsiz derecede küçük",
+      "generous": "cömert, bol, yüksek miktarda",
+      "redundant": "gereksiz, fazladan tekrarlanan",
+      "immutable": "değişmez, sabit",
+      "malleable": "şekillendirilebilir, esnek, uyarlanabilir",
+      "esoteric": "sadece dar bir uzman grubunun anlayabildiği, derin/kapalı",
+      "archaic": "çok eski, çağ dışı, arkaik",
+      "insolence": "küstahlık, saygısızlık",
+      "frivolity": "ciddiyetsizlik, uçarı/hafif olma",
+      "volatility": "değişkenlik, oynaklık, dalgalanma",
+      "gravity": "ağırbaşlılık, ciddiyet, vakur duruş",
+      "cataclysmic": "büyük felaket niteliğinde, yıkıcı",
+      "transitory": "geçici, kısa süreli",
+      "imperceptible": "fark edilemeyecek kadar küçük, algılanamaz",
+      "perennial": "sürekli, yıllarca devam eden, kalıcı",
+      // Mocks 2–10 vocabBank Words & Distractors
+      "anachronistic": "kronolojik olarak yanlış döneme ait, çağ dışı",
+      "pellucid": "son derece berrak, anlaşılır, şeffaf",
+      "superfluous": "gereksiz, fazlalık, ihtiyaç fazlası",
+      "prosaic": "sıradan, yavan, hayal gücünden yoksun",
+      "chimerical": "hayali, gerçek dışı, kuruntu ürünü",
+      "dogmatic": "dogmatik, kanıtlara rağmen kendi katı görüşünü dayatan",
+      "ubiquitous": "her yerde aynı anda bulunan, çok yaygın",
+      "laconic": "az ve öz konuşan, veciz, kısa",
+      "prolix": "gereksiz yere uzun ve ayrıntılı, sözü uzatan",
+      "capricious": "kaprisli, sağı solu belli olmayan, ani değişen",
+      "obviate": "önceden önlemek, gereksiz kılmak, ortadan kaldırmak",
+      "exacerbate": "kötüleştirmek, ağırlaştırmak, şiddetlendirmek",
+      "perpetuate": "sürekli kılmak, devam ettirmek",
+      "disseminate": "yaymak, dağıtmak (bilgi, fikir vb.)",
+      "indispensable": "vazgeçilmez, çok gerekli, elzem",
+      "parsimonious": "aşırı tutumlu, cimri, eli sıkı",
+      "arcane": "gizemli, anlaşılması güç, sadece az kişinin bildiği",
+      "opaque": "bulanık, anlaşılması zor, şeffaf olmayan",
+      "ambiguous": "muğlak, belirsiz, iki anlamlı",
+      "convoluted": "karmaşık, dolambaçlı, çetrefilli",
+      "methodical": "yöntemli, düzenli, sistemli",
+      "staid": "ağırbaşlı, sakin, ciddi",
+      "inflexible": "esnek olmayan, katı, değişmez",
+      "innovative": "yenilikçi, özgün",
+      "sublime": "yüce, görkemli, hayranlık uyandırıcı",
+      "iconoclastic": "yerleşik inanç ve gelenekleri yıkan, tabuları deviren",
+      "lavish": "savurgan, gösterişli, çok bol",
+      "munificent": "son derece cömert, eli açık",
+      "prodigal": "müsrif, savurgan",
+      "mundane": "sıradan, dünyevi, olağan",
+      "elementary": "temel, basit, başlangıç düzeyinde",
+      "mercurial": "ruh hali aniden değişen, değişken, öngörülemez",
+      "equable": "sakin, dengeli, kolay sarsılmayan",
+      "placid": "huzurlu, dingin, sakin",
+      "traditional": "geleneksel",
+      "reverent": "derin saygı duyan, hürmetkâr",
+      "complaisant": "uysal, başkalarını memnun etmeye istekli",
+      "sporadic": "aralıklarla olan, tek tük, düzensiz",
+      "localized": "belirli bir bölgeyle sınırlı, yerel",
+      "anomalous": "normal dışı, aykırı, istisnai",
+      "ephemeral": "çok kısa ömürlü, geçici",
+      "interminable": "bitmek bilmeyen, sonu gelmez",
+      "inexorable": "durdurulamaz, amansız, kaçınılmaz",
+      "pragmatic": "pragmatik, uygulamaya ve sonuca yönelik",
+      "tentative": "kesin olmayan, geçici, tereddütlü",
+      "pliable": "kolay bükülen, esnek, kolay etkilenen",
+      "ameliorate": "iyileştirmek, daha iyi hale getirmek, hafifletmek",
+      "aggravate": "kötüleştirmek, ağırlaştırmak",
+      "repudiate": "reddetmek, kabul etmemek, inkâr etmek",
+      "corroborate": "doğrulamak, kanıtlarla desteklemek",
+      "scrupulous": "titiz, özenli, kılı kırk yaran",
+      "perfunctory": "üstünkörü, baştan savma, özensiz",
+      "nonchalant": "kayıtsız, umursamaz, rahat",
+      "ostentatious": "gösterişçi, şatafatlı, abartılı"
+    };
+
     function getReadingQuestionTip(q) {
       if (!q || q.section !== 'reading-writing') return null;
-      if (q.tip) return q.tip;
-      if (MOCK_1_READING_TIPS[q.id]) return MOCK_1_READING_TIPS[q.id];
-      return null;
+      const baseTip = q.tip || MOCK_1_READING_TIPS[q.id] || null;
+      if (!baseTip) return null;
+      if (q.questionType === 'words-in-context' && Array.isArray(q.options) && !baseTip.includes('Kelime Anlamları (TR):')) {
+        const trList = q.options.map(optStr => {
+          const m = optStr.match(/^([A-D])\)\s*(.+)$/);
+          if (!m) return optStr;
+          const letter = m[1];
+          const word = m[2].trim();
+          const tr = VOCAB_TURKISH_MEANINGS[word.toLowerCase()];
+          return tr ? `${letter}) ${word}: ${tr}` : `${letter}) ${word}`;
+        }).join(' • ');
+        return `${baseTip}\n🇹🇷 Kelime Anlamları (TR): ${trList}`;
+      }
+      return baseTip;
     }
 
     MOCK_1_DATA.forEach(q => {
       if (q.section === 'reading-writing' && MOCK_1_READING_TIPS[q.id]) {
-        q.tip = MOCK_1_READING_TIPS[q.id];
+        q.tip = getReadingQuestionTip(q);
       }
     });
 
@@ -5078,7 +5176,7 @@
                       <span className="font-bold uppercase tracking-wider text-[11px] text-amber-700 dark:text-amber-300 block mb-0.5">
                         Reading Strategy Tip
                       </span>
-                      <span>{activeTip}</span>
+                      <span className="whitespace-pre-line">{activeTip}</span>
                     </div>
                   </div>
                 )}
