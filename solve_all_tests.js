@@ -147,6 +147,11 @@ function independentlySolveMath(q) {
     return `$${m[1]}x + ${m[2]}y \\le ${m[3]}$`;
   }
 
+  // Linear inequalities community theater ticket revenue
+  if ((m = s.match(/standard tickets for \$\\\$(\d+)\$ each and patron tickets for \$\\\$(\d+)\$ each\. To cover production expenses, the theater must collect at least \$\\\$(\d+)\$/))) {
+    return `$${m[1]}x + ${m[2]}y \\ge ${m[3]}$`;
+  }
+
   // Equivalent expressions: (x - k)(x + k)
   if ((m = s.match(/equivalent to \$\(x - (\d+)\)\(x \+ (\d+)\)\$/))) {
     const k = Number(m[1]);
@@ -183,8 +188,18 @@ function independentlySolveMath(q) {
     return String((rhs * rhs - kVal) / a);
   }
 
+  // Radicals rational exponent identity: \sqrt[qRoot]{x^{pExp}}
+  if ((m = s.match(/equivalent to \$\\sqrt\[(\d+)\]\{x\^\{(\d+)\}\}\$ for all \$x > 0\$/))) {
+    return `$x^{\\frac{${m[2]}}{${m[1]}}}$`;
+  }
+
   // Ratios/rates vehicle speed * time
   if ((m = s.match(/average speed of \$(\d+)\$ miles per hour\. At this rate, how many miles will the vehicle travel in \$(\d+)\$ hours/))) {
+    return String(Number(m[1]) * Number(m[2]));
+  }
+
+  // Ratios/rates architectural blueprint scale
+  if ((m = s.match(/\$1\$ centimeter represents \$(\d+)\$ meters of actual length\. If a courtyard wall measures \$(\d+)\$ centimeters on the blueprint/))) {
     return String(Number(m[1]) * Number(m[2]));
   }
 
@@ -194,16 +209,33 @@ function independentlySolveMath(q) {
     return `$${Math.round(orig * (100 - pct)) / 100}`;
   }
 
+  // Percentages botanical garden membership increase
+  if ((m = s.match(/had \$(\d+)\$ annual members last year\. This year, the number of annual members increased by \$(\d+)\\%\$/))) {
+    const init = Number(m[1]), pct = Number(m[2]);
+    return String(Math.round(init * (100 + pct) / 100));
+  }
+
   // One-variable data 5th exam score for target mean
   if ((m = s.match(/scored \$(\d+)\$, \$(\d+)\$, \$(\d+)\$, and \$(\d+)\$ on four exams\. What score must the student earn on the fifth exam to achieve an overall mean of \$(\d+)\$/))) {
     const s1 = Number(m[1]), s2 = Number(m[2]), s3 = Number(m[3]), s4 = Number(m[4]), target = Number(m[5]);
     return String(5 * target - (s1 + s2 + s3 + s4));
   }
 
+  // One-variable data range of five temperatures
+  if ((m = s.match(/five consecutive days were \$(\d+)\$, \$(\d+)\$, \$(\d+)\$, \$(\d+)\$, and \$(\d+)\$\. What is the range/))) {
+    const vals = [Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5])];
+    return String(Math.max(...vals) - Math.min(...vals));
+  }
+
   // Two-variable data scatterplot prediction
   if ((m = s.match(/line of best fit has equation \$y = ([0-9.]+)x \+ 4\$\. According to this model, what is the predicted score gain for a student who studies for \$(\d+)\$ hours/))) {
     const slope = Number(m[1]), hrs = Number(m[2]);
     return String(Math.round((slope * hrs + 4) * 10) / 10);
+  }
+
+  // Two-variable data y-intercept interpretation (cooling mineral sample)
+  if ((m = s.match(/line of best fit for the data is \$y = (\d+) - ([0-9.]+)x\$\. What is the best interpretation of \$(\d+)\$ in this context/))) {
+    return "The predicted temperature, in degrees Celsius, of the sample when it was removed from the furnace ($x = 0$)";
   }
 
   // Probability red/blue marbles
