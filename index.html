@@ -41,23 +41,23 @@
     };
   </script>
 
-  <!-- 2. KaTeX CDN -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <!-- 2. KaTeX CDN (with automatic Cloudflare cdnjs fallback) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css';" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js';"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js';"></script>
 
-  <!-- 3. React 18 & ReactDOM UMD -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- 3. React 18 & ReactDOM UMD (with automatic jsDelivr fallback) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js';"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js';"></script>
 
   <!-- 4. Lucide React UMD Bridge -->
   <script>
     window.react = window.React;
   </script>
-  <script src="https://unpkg.com/lucide-react@0.344.0/dist/umd/lucide-react.js"></script>
+  <script src="https://unpkg.com/lucide-react@0.344.0/dist/umd/lucide-react.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/lucide-react@0.344.0/dist/umd/lucide-react.js';"></script>
 
-  <!-- 5. Babel Standalone -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- 5. Babel Standalone (pinned v7 with automatic jsDelivr fallback) -->
+  <script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.0/babel.min.js';"></script>
 
   <!-- 6. Desmos Graphing Calculator API -->
   <script src="https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
@@ -89,6 +89,90 @@
       overflow-x: auto;
       overflow-y: hidden;
       padding: 4px 0;
+    }
+    /* Native DOM Math Fallback Styles (used if KaTeX CDN is offline or delayed) */
+    .math-fallback-inline {
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      font-style: italic;
+      padding: 0 1px;
+    }
+    .math-fallback-display {
+      display: block;
+      text-align: center;
+      margin: 0.65em 0;
+      padding: 4px 0;
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      font-style: italic;
+      overflow-x: auto;
+    }
+    .math-fallback-roman {
+      font-style: normal;
+      font-family: Inter, system-ui, sans-serif;
+    }
+    .math-fallback-sqrt {
+      display: inline-flex;
+      align-items: baseline;
+      white-space: nowrap;
+      vertical-align: baseline;
+    }
+    .math-fallback-root-idx {
+      font-size: 0.65em;
+      margin-right: -2px;
+      vertical-align: 0.45em;
+      font-style: normal;
+    }
+    .math-fallback-surd {
+      font-style: normal;
+      font-weight: 600;
+      margin-right: 0.5px;
+      line-height: 1;
+    }
+    .math-fallback-radicand {
+      border-top: 1.25px solid currentColor;
+      padding: 0 2px;
+      display: inline-block;
+      line-height: 1.15;
+    }
+    .math-fallback-frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 2px;
+      font-size: 0.88em;
+      line-height: 1.1;
+    }
+    .math-fallback-num {
+      border-bottom: 1px solid currentColor;
+      padding: 0 3px 1px;
+      text-align: center;
+    }
+    .math-fallback-den {
+      padding: 1px 3px 0;
+      text-align: center;
+    }
+    .math-fallback-cases {
+      display: inline-flex;
+      align-items: center;
+      border-left: 2px solid currentColor;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      padding-left: 8px;
+      margin: 4px 0;
+      text-align: left;
+    }
+    .math-fallback-table {
+      display: inline-table;
+      border-collapse: collapse;
+      margin: 4px auto;
+      font-style: normal;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.92em;
+    }
+    .math-fallback-table td, .math-fallback-table th {
+      border: 1px solid rgba(100, 116, 139, 0.45);
+      padding: 3px 10px;
+      text-align: center;
     }
     mark.user-highlight {
       background-color: #fef08a;
@@ -211,30 +295,391 @@
     }
 
     // ==========================================
-    // 2. SAFE KaTeX MATH RENDERER
+    // 2. SAFE KaTeX MATH RENDERER (WITH NATIVE DOM FALLBACK)
     // ==========================================
+    const LATEX_SYMBOL_MAP = {
+      pi: 'π', theta: 'θ', phi: 'φ', Phi: 'Φ', alpha: 'α', beta: 'β', gamma: 'γ',
+      Delta: 'Δ', triangle: '△', angle: '∠', circ: '°',
+      le: '≤', leq: '≤', ge: '≥', geq: '≥', neq: '≠', ne: '≠',
+      pm: '±', mp: '∓', times: '×', div: '÷', cdot: '·',
+      implies: ' ⟹ ', Rightarrow: ' ⇒ ', rightarrow: ' → ', to: ' → ',
+      infty: '∞', approx: '≈', sim: '∼', cong: '≅', perp: '⊥', parallel: '∥',
+      quad: ' \u00A0 ', qquad: ' \u00A0\u00A0 '
+    };
+    const LATEX_ROMAN_FUNCS = new Set(['sin', 'cos', 'tan', 'cot', 'sec', 'csc', 'log', 'ln', 'max', 'min']);
+
+    function extractBracedGroup(str, startIdx) {
+      if (startIdx >= str.length || str[startIdx] !== '{') return null;
+      let depth = 0;
+      let i = startIdx;
+      while (i < str.length) {
+        if (str[i] === '\\') {
+          i += 2;
+          continue;
+        }
+        if (str[i] === '{') depth++;
+        else if (str[i] === '}') {
+          depth--;
+          if (depth === 0) {
+            return { content: str.slice(startIdx + 1, i), nextIdx: i + 1 };
+          }
+        }
+        i++;
+      }
+      return { content: str.slice(startIdx + 1), nextIdx: str.length };
+    }
+
+    function extractBracketGroup(str, startIdx) {
+      if (startIdx >= str.length || str[startIdx] !== '[') return null;
+      let depth = 0;
+      let i = startIdx;
+      while (i < str.length) {
+        if (str[i] === '[') depth++;
+        else if (str[i] === ']') {
+          depth--;
+          if (depth === 0) {
+            return { content: str.slice(startIdx + 1, i), nextIdx: i + 1 };
+          }
+        }
+        i++;
+      }
+      return null;
+    }
+
+    function buildLatexFallbackDOM(tex, parentEl) {
+      if (!tex) return;
+      let s = tex.trim();
+
+      // Handle \begin{cases} ... \end{cases}
+      const casesMatch = s.match(/^\\begin\{cases\}([\s\S]*?)\\end\{cases\}$/);
+      if (casesMatch) {
+        const box = document.createElement('span');
+        box.className = 'math-fallback-cases';
+        const inner = document.createElement('span');
+        const rows = casesMatch[1].split(/\\\\/).map(r => r.trim()).filter(Boolean);
+        rows.forEach((r, idx) => {
+          const rowEl = document.createElement('div');
+          buildLatexFallbackDOM(r.replace(/&/g, ' '), rowEl);
+          inner.appendChild(rowEl);
+        });
+        box.appendChild(inner);
+        parentEl.appendChild(box);
+        return;
+      }
+
+      // Handle \begin{aligned} ... \end{aligned}
+      const alignedMatch = s.match(/^\\begin\{aligned\}([\s\S]*?)\\end\{aligned\}$/);
+      if (alignedMatch) {
+        const box = document.createElement('span');
+        box.style.display = 'inline-block';
+        box.style.textAlign = 'left';
+        box.style.verticalAlign = 'middle';
+        const rows = alignedMatch[1].split(/\\\\/).map(r => r.trim()).filter(Boolean);
+        rows.forEach(r => {
+          const rowEl = document.createElement('div');
+          buildLatexFallbackDOM(r.replace(/&/g, ''), rowEl);
+          box.appendChild(rowEl);
+        });
+        parentEl.appendChild(box);
+        return;
+      }
+
+      // Handle \begin{array}{...} ... \end{array}
+      const arrayMatch = s.match(/^\\begin\{array\}\{[^}]*\}([\s\S]*?)\\end\{array\}$/);
+      if (arrayMatch) {
+        const table = document.createElement('table');
+        table.className = 'math-fallback-table';
+        const tbody = document.createElement('tbody');
+        const rows = arrayMatch[1].split(/\\\\/).map(r => r.replace(/\\hline/g, '').trim()).filter(Boolean);
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          const cells = r.split('&');
+          cells.forEach(c => {
+            const td = document.createElement('td');
+            buildLatexFallbackDOM(c.trim(), td);
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        parentEl.appendChild(table);
+        return;
+      }
+
+      let i = 0;
+      let textBuf = '';
+      const flushText = () => {
+        if (textBuf) {
+          parentEl.appendChild(document.createTextNode(textBuf));
+          textBuf = '';
+        }
+      };
+
+      while (i < s.length) {
+        const ch = s[i];
+
+        if (ch === '\\') {
+          if (i + 1 < s.length && !/[a-zA-Z]/.test(s[i + 1])) {
+            const esc = s[i + 1];
+            if (esc === '{' || esc === '}' || esc === '%' || esc === '$' || esc === '&' || esc === '#') {
+              textBuf += esc;
+            } else if (esc === ',' || esc === ';' || esc === ':') {
+              textBuf += '\u2009';
+            }
+            i += 2;
+            continue;
+          }
+          let j = i + 1;
+          while (j < s.length && /[a-zA-Z]/.test(s[j])) j++;
+          const cmd = s.slice(i + 1, j);
+          i = j;
+
+          if (cmd === 'left' || cmd === 'right') {
+            continue;
+          } else if (cmd === 'sqrt') {
+            flushText();
+            while (i < s.length && s[i] === ' ') i++;
+            let rootIdxStr = null;
+            if (s[i] === '[') {
+              const brk = extractBracketGroup(s, i);
+              if (brk) {
+                rootIdxStr = brk.content;
+                i = brk.nextIdx;
+              }
+            }
+            while (i < s.length && s[i] === ' ') i++;
+            let radicandStr = '';
+            if (s[i] === '{') {
+              const grp = extractBracedGroup(s, i);
+              if (grp) {
+                radicandStr = grp.content;
+                i = grp.nextIdx;
+              }
+            } else if (i < s.length) {
+              radicandStr = s[i];
+              i++;
+            }
+            const sqrtWrap = document.createElement('span');
+            sqrtWrap.className = 'math-fallback-sqrt';
+            if (rootIdxStr) {
+              const supIdx = document.createElement('sup');
+              supIdx.className = 'math-fallback-root-idx';
+              buildLatexFallbackDOM(rootIdxStr, supIdx);
+              sqrtWrap.appendChild(supIdx);
+            }
+            const surd = document.createElement('span');
+            surd.className = 'math-fallback-surd';
+            surd.textContent = '√';
+            sqrtWrap.appendChild(surd);
+
+            const radSpan = document.createElement('span');
+            radSpan.className = 'math-fallback-radicand';
+            buildLatexFallbackDOM(radicandStr, radSpan);
+            sqrtWrap.appendChild(radSpan);
+            parentEl.appendChild(sqrtWrap);
+          } else if (cmd === 'frac' || cmd === 'dfrac' || cmd === 'tfrac') {
+            flushText();
+            while (i < s.length && s[i] === ' ') i++;
+            const numGrp = extractBracedGroup(s, i);
+            let numStr = '';
+            if (numGrp) {
+              numStr = numGrp.content;
+              i = numGrp.nextIdx;
+            }
+            while (i < s.length && s[i] === ' ') i++;
+            const denGrp = extractBracedGroup(s, i);
+            let denStr = '';
+            if (denGrp) {
+              denStr = denGrp.content;
+              i = denGrp.nextIdx;
+            }
+            const fracWrap = document.createElement('span');
+            fracWrap.className = 'math-fallback-frac';
+            const numSpan = document.createElement('span');
+            numSpan.className = 'math-fallback-num';
+            buildLatexFallbackDOM(numStr, numSpan);
+            const denSpan = document.createElement('span');
+            denSpan.className = 'math-fallback-den';
+            buildLatexFallbackDOM(denStr, denSpan);
+            fracWrap.appendChild(numSpan);
+            fracWrap.appendChild(denSpan);
+            parentEl.appendChild(fracWrap);
+          } else if (cmd === 'text' || cmd === 'mathrm' || cmd === 'textbf') {
+            flushText();
+            while (i < s.length && s[i] === ' ') i++;
+            const txtGrp = extractBracedGroup(s, i);
+            if (txtGrp) {
+              const span = document.createElement('span');
+              span.className = 'math-fallback-roman';
+              if (cmd === 'textbf') span.style.fontWeight = '600';
+              span.textContent = txtGrp.content;
+              parentEl.appendChild(span);
+              i = txtGrp.nextIdx;
+            }
+          } else if (LATEX_ROMAN_FUNCS.has(cmd)) {
+            flushText();
+            const fnSpan = document.createElement('span');
+            fnSpan.className = 'math-fallback-roman';
+            fnSpan.textContent = cmd;
+            parentEl.appendChild(fnSpan);
+          } else if (LATEX_SYMBOL_MAP[cmd] !== undefined) {
+            textBuf += LATEX_SYMBOL_MAP[cmd];
+            if (i < s.length && s[i] === ' ') i++;
+          } else {
+            textBuf += cmd;
+          }
+        } else if (ch === '^' || ch === '_') {
+          flushText();
+          const isSup = ch === '^';
+          i++;
+          while (i < s.length && s[i] === ' ') i++;
+          let scriptStr = '';
+          if (s[i] === '{') {
+            const grp = extractBracedGroup(s, i);
+            if (grp) {
+              scriptStr = grp.content;
+              i = grp.nextIdx;
+            }
+          } else if (s[i] === '\\') {
+            let j = i + 1;
+            while (j < s.length && /[a-zA-Z]/.test(s[j])) j++;
+            scriptStr = s.slice(i, j);
+            i = j;
+          } else if (i < s.length) {
+            scriptStr = s[i];
+            i++;
+          }
+          if (isSup && (scriptStr.trim() === '\\circ' || scriptStr.trim() === 'circ')) {
+            textBuf += '°';
+          } else {
+            const el = document.createElement(isSup ? 'sup' : 'sub');
+            buildLatexFallbackDOM(scriptStr, el);
+            parentEl.appendChild(el);
+          }
+        } else if (ch === '{') {
+          flushText();
+          const grp = extractBracedGroup(s, i);
+          if (grp) {
+            buildLatexFallbackDOM(grp.content, parentEl);
+            i = grp.nextIdx;
+          } else {
+            i++;
+          }
+        } else {
+          textBuf += ch;
+          i++;
+        }
+      }
+      flushText();
+    }
+
+    function appendPlainTextWithBoldDOM(textStr, parentEl) {
+      if (!textStr) return;
+      if (!textStr.includes('**')) {
+        parentEl.appendChild(document.createTextNode(textStr));
+        return;
+      }
+      const parts = textStr.split(/\*\*([^*]+)\*\*/g);
+      parts.forEach((part, idx) => {
+        if (!part) return;
+        if (idx % 2 === 1) {
+          const strong = document.createElement('strong');
+          strong.className = 'font-semibold text-slate-900 dark:text-white';
+          strong.textContent = part;
+          parentEl.appendChild(strong);
+        } else {
+          parentEl.appendChild(document.createTextNode(part));
+        }
+      });
+    }
+
+    function applyBoldToTextNodes(rootEl) {
+      if (!rootEl) return;
+      const childNodes = Array.from(rootEl.childNodes);
+      childNodes.forEach(node => {
+        if (node.nodeType === 3 && node.nodeValue && node.nodeValue.includes('**')) {
+          const frag = document.createDocumentFragment();
+          appendPlainTextWithBoldDOM(node.nodeValue, frag);
+          rootEl.replaceChild(frag, node);
+        }
+      });
+    }
+
+    function renderNativeMathFallback(containerEl, rawContent) {
+      while (containerEl.firstChild) {
+        containerEl.removeChild(containerEl.firstChild);
+      }
+      const str = String(rawContent);
+      const tokenRegex = /(\$\$[\s\S]+?\$\$|\$(?:\\\$|[^$])+?\$)/g;
+      let lastIndex = 0;
+      let match;
+      while ((match = tokenRegex.exec(str)) !== null) {
+        if (match.index > lastIndex) {
+          appendPlainTextWithBoldDOM(str.slice(lastIndex, match.index), containerEl);
+        }
+        const token = match[0];
+        const isDisplay = token.startsWith('$$') && token.endsWith('$$');
+        const innerTex = isDisplay ? token.slice(2, -2) : token.slice(1, -1);
+        if (window.katex && typeof window.katex.render === 'function') {
+          const span = document.createElement(isDisplay ? 'div' : 'span');
+          try {
+            window.katex.render(innerTex, span, { displayMode: isDisplay, throwOnError: false });
+            containerEl.appendChild(span);
+            lastIndex = tokenRegex.lastIndex;
+            continue;
+          } catch (e) {}
+        }
+        const mathSpan = document.createElement(isDisplay ? 'div' : 'span');
+        mathSpan.className = isDisplay ? 'math-fallback-display' : 'math-fallback-inline';
+        buildLatexFallbackDOM(innerTex, mathSpan);
+        containerEl.appendChild(mathSpan);
+        lastIndex = tokenRegex.lastIndex;
+      }
+      if (lastIndex < str.length) {
+        appendPlainTextWithBoldDOM(str.slice(lastIndex), containerEl);
+      }
+    }
+
     function MathRenderer({ content, className = '' }) {
       if (!content) return null;
       const ref = React.useRef(null);
 
       React.useEffect(() => {
-        if (!ref.current) return;
-        ref.current.textContent = content;
-        if (window.renderMathInElement) {
-          try {
-            window.renderMathInElement(ref.current, {
-              delimiters: [
-                { left: '$$', right: '$$', display: true },
-                { left: '$', right: '$', display: false },
-                { left: '\\[', right: '\\]', display: true },
-                { left: '\\(', right: '\\)', display: false }
-              ],
-              throwOnError: false,
-              errorColor: '#f43f5e'
-            });
-          } catch (e) {
-            console.warn('KaTeX render error:', e);
+        const el = ref.current;
+        if (!el) return;
+
+        const performRender = () => {
+          if (!ref.current) return;
+          if (window.renderMathInElement) {
+            try {
+              ref.current.textContent = content;
+              window.renderMathInElement(ref.current, {
+                delimiters: [
+                  { left: '$$', right: '$$', display: true },
+                  { left: '$', right: '$', display: false },
+                  { left: '\\[', right: '\\]', display: true },
+                  { left: '\\(', right: '\\)', display: false }
+                ],
+                throwOnError: false,
+                errorColor: '#f43f5e'
+              });
+              if (String(content).includes('**')) {
+                applyBoldToTextNodes(ref.current);
+              }
+              return true;
+            } catch (e) {
+              console.warn('KaTeX render error, using native DOM math fallback:', e);
+            }
           }
+          renderNativeMathFallback(ref.current, content);
+          return false;
+        };
+
+        const renderedWithKatex = performRender();
+        if (!renderedWithKatex) {
+          const handleLoad = () => { performRender(); };
+          window.addEventListener('load', handleLoad, { once: true });
+          return () => window.removeEventListener('load', handleLoad);
         }
       }, [content]);
 
@@ -243,10 +688,34 @@
       );
     }
 
-    // Safe phrase-based text highlighter that preserves React virtual DOM and supports multi-color highlights
+    // Safe phrase-based text highlighter that preserves React virtual DOM, supports multi-color highlights, and renders **bold** spans
     function renderPassageWithHighlights(text, phrases = [], onRemovePhrase = null) {
       if (!text) return '';
-      if (!phrases || phrases.length === 0) return text;
+
+      const renderBoldInSegments = (segs) => {
+        const result = [];
+        segs.forEach((seg, sIdx) => {
+          if (typeof seg !== 'string' || !seg.includes('**')) {
+            result.push(seg);
+            return;
+          }
+          const parts = seg.split(/\*\*([^*]+)\*\*/g);
+          parts.forEach((part, pIdx) => {
+            if (pIdx % 2 === 1) {
+              result.push(
+                <strong key={`bold-${sIdx}-${pIdx}`} className="font-semibold text-slate-900 dark:text-white underline decoration-indigo-400/60 underline-offset-4">
+                  {part}
+                </strong>
+              );
+            } else if (part.length > 0) {
+              result.push(part);
+            }
+          });
+        });
+        return result.length === 1 && typeof result[0] === 'string' ? result[0] : result;
+      };
+
+      if (!phrases || phrases.length === 0) return renderBoldInSegments([text]);
 
       let segments = [text];
       phrases.forEach((phraseEntry, phraseIdx) => {
@@ -294,7 +763,7 @@
         segments = nextSegments;
       });
 
-      return segments;
+      return renderBoldInSegments(segments);
     }
 
     // ==========================================
@@ -588,7 +1057,7 @@
           {
             id: 'walkthrough-sec-1',
             title: 'Sentence Boundaries: Colons and Exemplifying Phrases',
-            passage: "During the late nineteenth century, paleontologist Mary Anning unearthed some of the most consequential marine fossils in Great ________ the complete skeleton of a plesiosaur, which provided pivotal evidence supporting the concept of biological extinction.",
+            passage: "During the early nineteenth century, paleontologist Mary Anning unearthed some of the most consequential marine fossils in Great ________ the complete skeleton of a plesiosaur, which provided pivotal evidence supporting the concept of biological extinction.",
             stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
             options: [
               "A) Britain, including:",
@@ -598,7 +1067,7 @@
             ],
             correctAnswer: "C",
             stepRationales: [
-              "Step 1: Check the clause structure. Clause 1: 'During the late nineteenth century, paleontologist Mary Anning unearthed some of the most consequential marine fossils in Great Britain' $\\rightarrow$ Complete Independent Clause.",
+              "Step 1: Check the clause structure. Clause 1: 'During the early nineteenth century, paleontologist Mary Anning unearthed some of the most consequential marine fossils in Great Britain' $\\rightarrow$ Complete Independent Clause.",
               "Step 2: Trailing modifier: 'including the complete skeleton of a plesiosaur...' is a non-restrictive participial phrase introducing an example.",
               "Step 3: Standard English convention: phrases introduced by 'including' are set off with a simple comma: ', including' (Choice C). A colon cannot be placed after 'including' (Choice A), a semicolon cannot link a dependent fragment (Choice B), and a colon before 'including' creates an ungrammatical double pause (Choice D)."
             ],
@@ -781,10 +1250,10 @@
             passage: null,
             stem: "Which of the following equivalent forms of the function $f(x) = 2x^2 - 12x + 10$ displays the minimum value of the function as a constant or coefficient?",
             options: [
-              "A) f(x) = 2(x - 1)(x - 5)",
-              "B) f(x) = 2(x - 3)^2 - 8",
-              "C) f(x) = 2(x^2 - 6x) + 10",
-              "D) f(x) = (2x - 2)(x - 5)"
+              "A) $f(x) = 2(x - 1)(x - 5)$",
+              "B) $f(x) = 2(x - 3)^2 - 8$",
+              "C) $f(x) = 2(x^2 - 6x) + 10$",
+              "D) $f(x) = (2x - 2)(x - 5)$"
             ],
             correctAnswer: "B",
             stepRationales: [
@@ -862,7 +1331,7 @@
             id: 'walkthrough-psda-2',
             title: 'Statistics: Outlier Impact on Mean vs Median',
             passage: null,
-            stem: "Dataset A consists of daily revenues (in dollars) of a bookstore for 15 consecutive days, with a mean of $850 and a median of $840. On the 16th day, a rare collection sale generates $12,500 in revenue. This 16th value is added to form Dataset B. Which statement correctly describes how the mean and median of Dataset B compare to Dataset A?",
+            stem: "Dataset A consists of daily revenues (in dollars) of a bookstore for 15 consecutive days, with a mean of $\\$850$ and a median of $\\$840$. On the 16th day, a rare collection sale generates $\\$12,500$ in revenue. This 16th value is added to form Dataset B. Which statement correctly describes how the mean and median of Dataset B compare to Dataset A?",
             options: [
               "A) Both the mean and the median will increase by approximately the same dollar amount.",
               "B) The mean will increase substantially, while the median will remain relatively stable or increase only slightly.",
@@ -871,7 +1340,7 @@
             ],
             correctAnswer: "B",
             stepRationales: [
-              "Step 1: Analyze the outlier: $12,500 is nearly 15 times larger than the existing mean of $850.",
+              "Step 1: Analyze the outlier: $\\$12,500$ is nearly 15 times larger than the existing mean of $\\$850$.",
               "Step 2: The mean incorporates all values ($(\\sum x)/n$), so an extreme high outlier pulls the mean up dramatically. The median is positional (the middle item in sorted order); adding one large value shifts the median position by at most half a step to the next adjacent sorted data point.",
               "Step 3: Therefore, the mean increases substantially while the median remains stable. Choice B is correct."
             ],
@@ -894,7 +1363,7 @@
           testFrequency: "Appears in every Math module (approx 5-7 questions per full exam, ~15% of total Math score)."
         },
         traps: [
-          { name: "Radius vs Diameter / r^2 vs r", description: "Calculating $r^2 = 36$ and answering 36 instead of taking the square root to find $r = 6$, or forgetting to halve a diameter.", detectionCue: "Check if the equation yields $r^2$ and verify whether the stem asked for radius, diameter, or area." },
+          { name: "Radius vs Diameter / $r^2$ vs $r$", description: "Calculating $r^2 = 36$ and answering 36 instead of taking the square root to find $r = 6$, or forgetting to halve a diameter.", detectionCue: "Check if the equation yields $r^2$ and verify whether the stem asked for radius, diameter, or area." },
           { name: "Center Sign Reversal", description: "Reading $(x - 5)^2 + (y + 2)^2 = 36$ as having center $(-5, 2)$ instead of $(+5, -2)$.", detectionCue: "Remember $(x - h)$ flips the visible sign of $h$." },
           { name: "Linear vs Area Scaling", description: "If side lengths double ($k = 2$), incorrectly assuming area doubles, instead of quadrupling ($k^2 = 4$).", detectionCue: "Use $k^2$ for area and $k^3$ for volume." },
           { name: "Degree vs Radian Confusion", description: "Plugging degree measures directly into radian arc formulas $s = r\\theta$ without converting $\\times \\frac{\\pi}{180^\\circ}$.", detectionCue: "Check the units of $\\theta$ before applying arc length or sector area formulas." }
@@ -910,7 +1379,7 @@
             title: 'Circle Equation: Completing the Square for Radius',
             passage: null,
             stem: "A circle in the $xy$-plane has the equation:\n$$x^2 + y^2 - 10x + 4y = 7$$\nWhat is the radius of the circle?",
-            options: ["A) \\sqrt{7}", "B) \\sqrt{29}", "C) 36", "D) 6"],
+            options: ["A) $\\sqrt{7}$", "B) $\\sqrt{29}$", "C) 36", "D) 6"],
             correctAnswer: "D",
             stepRationales: [
               "Step 1: Group $x$ terms and $y$ terms: $(x^2 - 10x) + (y^2 + 4y) = 7$.",
@@ -920,7 +1389,7 @@
             trapAnalysis: {
               "A": "Trap Archetype: Unbalanced Equation — Forgetting to add 25 and 4 to the right-hand side, leaving $r^2 = 7$.",
               "B": "Trap Archetype: Constant Omission — Adding $25 + 4 = 29$ but forgetting the original constant 7.",
-              "C": "Trap Archetype: r^2 vs r Trap — Reporting $r^2 = 36$ instead of the radius $r = 6$."
+              "C": "Trap Archetype: $r^2$ vs $r$ Trap — Reporting $r^2 = 36$ instead of the radius $r = 6$."
             }
           },
           {
@@ -1125,7 +1594,7 @@
         questionType: "command-of-evidence-textual",
         difficulty: "hard",
         passage: "Literary scholar Nia Thorne argues that Mary Shelley's Frankenstein is less a critique of science than a critique of social abandonment: the Creature's destructive rage emerges only as a consequence of Victor Frankenstein's immediate revulsion and neglect, rather than from any innate moral defect in the Creature's initial nature.",
-        stem: "Which quotation from Frankenstein, if true, would most strongly support Thorne's argument?",
+        stem: "Which quotation from Frankenstein most effectively illustrates Thorne's argument?",
         options: ["A) 'Learn from me, if not by my precepts, at least by my example, how dangerous is the acquirement of knowledge.'","B) 'I was benevolent and good; misery made me a fiend. Make me happy, and I shall again be virtuous.'","C) 'I had desired it with an ardour that far exceeded moderation; but now that I had finished, the beauty of the dream vanished.'","D) 'A new species would bless me as its creator and source; many happy and excellent natures would owe their being to me.'"],
         correctAnswer: "B",
         explanation: "The quotation 'I was benevolent and good; misery made me a fiend. Make me happy, and I shall again be virtuous' directly demonstrates that the Creature was initially good and became destructive only through misery and abandonment."
@@ -1152,11 +1621,11 @@
         domain: "standard-english-conventions",
         questionType: "boundaries",
         difficulty: "easy",
-        passage: "During the Apollo 11 lunar descent, computer engineer Margaret Hamilton's software design prevented an abort by automatically deprioritizing radar calculations ________ the computer focused all processing power on the lunar module's descent engine thrusters.",
+        passage: "During the Apollo 11 lunar descent, computer engineer Margaret Hamilton's software design prevented an abort by automatically deprioritizing radar ________ the computer focused all processing power on the lunar module's descent engine thrusters.",
         stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        options: ["A) ; instead,","B) ; instead","C) , instead","D) instead:"],
+        options: ["A) calculations; instead,","B) calculations; instead","C) calculations, instead","D) calculations, instead:"],
         correctAnswer: "A",
-        explanation: "Two independent clauses are separated by a semicolon and transitional adverb followed by a comma: '; instead,'."
+        explanation: "Two independent clauses are separated by a semicolon and transitional adverb followed by a comma: 'calculations; instead,'."
       },
       {
         id: "m1-rw1-16",
@@ -1236,11 +1705,11 @@
         domain: "standard-english-conventions",
         questionType: "boundaries",
         difficulty: "medium",
-        passage: "Botanist Barbara McClintock conducted pioneering cytogenetic studies on maize in the 1940s ________ her discovery of mobile genetic elements, or 'jumping genes,' earned her the Nobel Prize in Physiology or Medicine decades later in 1983.",
+        passage: "Botanist Barbara McClintock conducted pioneering cytogenetic studies on maize in the ________ her discovery of mobile genetic elements, or 'jumping genes,' earned her the Nobel Prize in Physiology or Medicine decades later in 1983.",
         stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        options: ["A) , eventually","B) ; eventually,","C) eventually","D) : eventually"],
+        options: ["A) 1940s, eventually","B) 1940s; eventually,","C) 1940s eventually","D) 1940s: eventually"],
         correctAnswer: "B",
-        explanation: "Two independent clauses must be joined by a semicolon and transitional adverb with a comma: '; eventually,'."
+        explanation: "Two independent clauses must be joined by a semicolon and transitional adverb with a comma: '1940s; eventually,'."
       },
       {
         id: "m1-rw1-22",
@@ -1535,7 +2004,7 @@
         difficulty: "easy",
         passage: "During the excavation of Pompeii, archaeologists unearthed carbonized loaves of ________ their round shapes and baker's stamps were preserved for two millennia under volcanic lapilli.",
         stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        options: ["A) bread;","B) bread,","C) bread","D) bread:"],
+        options: ["A) bread;","B) bread,","C) bread","D) bread; while"],
         correctAnswer: "A",
         explanation: "Clause 1 ('During the excavation... bread') and Clause 2 ('their round shapes and baker's stamps were preserved... lapilli') are both complete independent clauses. Joining two independent clauses without a coordinating conjunction requires a semicolon (';')."
       },
@@ -1589,11 +2058,11 @@
         domain: "standard-english-conventions",
         questionType: "boundaries",
         difficulty: "medium",
-        passage: "The James Webb Space Telescope's primary mirror consists of eighteen hexagonal segments ________ each coated with a microscopically thin layer of vapor-deposited gold to optimize infrared reflectivity.",
+        passage: "The Atacama Large Millimeter Array in northern Chile comprises sixty-six high-precision radio ________ equipped with cryogenic receivers that detect faint millimeter-wavelength emissions from cold molecular gas clouds.",
         stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        options: ["A) , each","B) ; each","C) : each","D) each"],
+        options: ["A) antennas, each","B) antennas; each","C) antennas: each","D) antennas each"],
         correctAnswer: "A",
-        explanation: "'each coated with a microscopically thin layer...' is an absolute modifier phrase describing the segments. An absolute phrase modifying the previous clause is correctly connected with a comma: ', each'."
+        explanation: "'each equipped with cryogenic receivers...' is an absolute modifier phrase describing the sixty-six antennas. An absolute phrase modifying the previous clause is correctly connected with a comma: 'antennas, each'."
       },
       {
         id: "m1-rw2-20",
@@ -1603,11 +2072,11 @@
         domain: "standard-english-conventions",
         questionType: "form-structure-sense",
         difficulty: "easy",
-        passage: "Neither the lead researcher nor her graduate laboratory assistants ________ aware that the spectrometer calibration had drifted overnight.",
+        passage: "During the 1977 Voyager Golden Record selection process, astronomer Carl Sagan and his committee members ________ acoustic recordings from dozens of cultures to represent humanity's musical heritage to potential extraterrestrial listeners.",
         stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        options: ["A) being","B) was","C) is","D) were"],
+        options: ["A) compiles","B) is compiling","C) compiling","D) compiled"],
         correctAnswer: "D",
-        explanation: "With 'Neither... nor', the verb agrees with the closer subject 'graduate laboratory assistants' (plural, past tense), requiring 'were'."
+        explanation: "The introductory temporal phrase 'During the 1977 Voyager Golden Record selection process' establishes a completed past event, requiring the finite past-tense verb 'compiled'."
       },
       {
         id: "m1-rw2-21",
@@ -1762,7 +2231,7 @@
         difficulty: "medium",
         passage: null,
         stem: "Which inequality represents all real numbers $x$ such that $-3x + 12 \\le 27$?",
-        options: ["A) x \\ge 5","B) x \\le -5","C) x \\ge -5","D) x \\le 5"],
+        options: ["A) $x \\ge 5$","B) $x \\le -5$","C) $x \\ge -5$","D) $x \\le 5$"],
         correctAnswer: "C",
         explanation: "Subtract 12 from both sides: $-3x \\le 15$. Divide by $-3$ and reverse the inequality sign: $x \\ge -5$."
       },
@@ -1776,7 +2245,7 @@
         difficulty: "easy",
         passage: null,
         stem: "Which of the following is equivalent to the expression $(3x^2 - 4x + 7) - (x^2 + 5x - 8)$?",
-        options: ["A) 2x^2 - 9x - 1","B) 2x^2 + x - 1","C) 4x^2 + x + 15","D) 2x^2 - 9x + 15"],
+        options: ["A) $2x^2 - 9x - 1$","B) $2x^2 + x - 1$","C) $4x^2 + x + 15$","D) $2x^2 - 9x + 15$"],
         correctAnswer: "D",
         explanation: "Distribute the negative sign: $3x^2 - 4x + 7 - x^2 - 5x + 8 = (3x^2 - x^2) + (-4x - 5x) + (7 + 8) = 2x^2 - 9x + 15$."
       },
@@ -1790,7 +2259,7 @@
         difficulty: "medium",
         passage: null,
         stem: "What are the solutions to the quadratic equation $x^2 - 8x + 11 = 0$?",
-        options: ["A) x = -4 \\pm \\sqrt{5}","B) x = 4 \\pm \\sqrt{5}","C) x = 8 \\pm \\sqrt{20}","D) x = 4 \\pm 2\\sqrt{5}"],
+        options: ["A) $x = -4 \\pm \\sqrt{5}$","B) $x = 4 \\pm \\sqrt{5}$","C) $x = 8 \\pm \\sqrt{20}$","D) $x = 4 \\pm 2\\sqrt{5}$"],
         correctAnswer: "B",
         explanation: "Apply the quadratic formula: $x = \\frac{-(-8) \\pm \\sqrt{(-8)^2 - 4(1)(11)}}{2(1)} = \\frac{8 \\pm \\sqrt{64 - 44}}{2} = \\frac{8 \\pm \\sqrt{20}}{2} = \\frac{8 \\pm 2\\sqrt{5}}{2} = 4 \\pm \\sqrt{5}$."
       },
@@ -1804,7 +2273,7 @@
         difficulty: "medium",
         passage: null,
         stem: "A colony of bacteria initially contains 250 cells and triples in population every 4 hours. Which function $P(t)$ models the population after $t$ hours?",
-        options: ["A) P(t) = 250(4)^{t/3}","B) P(t) = 250(3)^{4t}","C) P(t) = 250(3)^{t/4}","D) P(t) = 3(250)^{t/4}"],
+        options: ["A) $P(t) = 250(4)^{t/3}$","B) $P(t) = 250(3)^{4t}$","C) $P(t) = 250(3)^{t/4}$","D) $P(t) = 3(250)^{t/4}$"],
         correctAnswer: "C",
         explanation: "Initial value $a = 250$. Growth factor is 3 every 4 hours, which requires exponent $t/4$. Thus, $P(t) = 250(3)^{t/4}$."
       },
@@ -1831,10 +2300,10 @@
         questionType: "percentages",
         difficulty: "easy",
         passage: null,
-        stem: "A retail store purchased a jacket wholesale for $80. The store marked up the wholesale price by 40% for retail display, and later offered a 15% promotional discount on the retail price. What was the final selling price of the jacket?",
+        stem: "A retail store purchased a jacket wholesale for $\\$80$. The store marked up the wholesale price by 40% for retail display, and later offered a 15% promotional discount on the retail price. What was the final selling price of the jacket?",
         options: ["A) $96.00","B) $95.20","C) $100.00","D) $105.60"],
         correctAnswer: "B",
-        explanation: "Markup: $$80 \\times 1.40 = \\$112$. Discount: $$112 \\times (1 - 0.15) = \\$112 \\times 0.85 = \\$95.20$."
+        explanation: "Markup: $\\$80 \\times 1.40 = \\$112$. Discount: $\\$112 \\times (1 - 0.15) = \\$112 \\times 0.85 = \\$95.20$."
       },
       {
         id: "m1-math1-10",
@@ -2030,7 +2499,7 @@
         questionType: "linear-equations-two-var",
         difficulty: "easy",
         passage: null,
-        stem: "A school fundraiser sells adult tickets for $12 each and student tickets for $7 each. If the club sold 140 tickets in total and collected $1,330, how many adult tickets were sold?",
+        stem: "A school fundraiser sells adult tickets for $\\$12$ each and student tickets for $\\$7$ each. If the club sold 140 tickets in total and collected $\\$1,330$, how many adult tickets were sold?",
         options: ["A) 80","B) 75","C) 70","D) 85"],
         correctAnswer: "C",
         explanation: "Let $a$ = adult tickets and $s$ = student tickets. System: $a + s = 140$ and $12a + 7s = 1330$. Substitute $s = 140 - a$: $12a + 7(140 - a) = 1330 \\implies 12a + 980 - 7a = 1330 \\implies 5a = 350 \\implies a = 70$."
@@ -2115,7 +2584,7 @@
         difficulty: "medium",
         passage: null,
         stem: "Which of the following functions has its minimum value at the point $(-4, -9)$?",
-        options: ["A) f(x) = 2(x + 4)^2 - 9","B) f(x) = 2(x - 4)^2 - 9","C) f(x) = -2(x + 4)^2 - 9","D) f(x) = 2(x + 4)^2 + 9"],
+        options: ["A) $f(x) = 2(x + 4)^2 - 9$","B) $f(x) = 2(x - 4)^2 - 9$","C) $f(x) = -2(x + 4)^2 - 9$","D) $f(x) = 2(x + 4)^2 + 9$"],
         correctAnswer: "A",
         explanation: "Vertex form: $f(x) = a(x - h)^2 + k$. For a minimum at $(-4, -9)$, $a > 0, h = -4, k = -9$, giving $f(x) = a(x - (-4))^2 - 9 = a(x + 4)^2 - 9$. Choice A matches with $a = 2$."
       },
@@ -2185,7 +2654,7 @@
         difficulty: "hard",
         passage: null,
         stem: "A circle has equation $x^2 + y^2 + 8x - 12y = 12$. What is the radius of this circle?",
-        options: ["A) 8","B) 64","C) 2√3","D) 4"],
+        options: ["A) 8","B) 64","C) $2\\sqrt{3}$","D) 4"],
         correctAnswer: "A",
         explanation: "Complete the square: $(x^2 + 8x + 16) + (y^2 - 12y + 36) = 12 + 16 + 36 \\implies (x + 4)^2 + (y - 6)^2 = 64$. Since $r^2 = 64$, the radius $r = \\sqrt{64} = 8$."
       },
@@ -2241,7 +2710,7 @@
         difficulty: "medium",
         passage: null,
         stem: "Which of the following is equivalent to the expression $x^{7/3}$ for all $x > 0$?",
-        options: ["A) x^2 \\sqrt[3]{x}","B) x^3 \\sqrt{x}","C) \\sqrt[7]{x^3}","D) x \\sqrt[3]{x^4}"],
+        options: ["A) $x^2 \\sqrt[3]{x}$","B) $x^3 \\sqrt{x}$","C) $\\sqrt[7]{x^3}$","D) $x \\sqrt[3]{x^4}$"],
         correctAnswer: "A",
         explanation: "Decompose the fraction: $\\frac{7}{3} = 2 + \\frac{1}{3}$. Therefore, $x^{7/3} = x^{2 + 1/3} = x^2 \\cdot x^{1/3} = x^2 \\sqrt[3]{x}$."
       },
@@ -2296,10 +2765,10 @@
         questionType: "nonlinear-equations",
         difficulty: "hard",
         passage: null,
-        stem: "What is the positive real solution to the equation $\\sqrt{2x + 15} = x$?",
+        stem: "What is the positive real solution to the equation $\\sqrt{4x + 21} = x$?",
         options: null,
-        correctAnswer: ["5"],
-        explanation: "Square both sides: $2x + 15 = x^2 \\implies x^2 - 2x - 15 = 0$. Factoring gives $(x - 5)(x + 3) = 0$. Since $x > 0$, candidate is $x = 5$. Check: $\\sqrt{2(5) + 15} = \\sqrt{25} = 5$. Thus $x = 5$."
+        correctAnswer: ["7"],
+        explanation: "Square both sides: $4x + 21 = x^2 \\implies x^2 - 4x - 21 = 0$. Factoring gives $(x - 7)(x + 3) = 0$. Since $x > 0$, candidate is $x = 7$. Check: $\\sqrt{4(7) + 21} = \\sqrt{49} = 7$. Thus $x = 7$."
       },
       {
         id: "m1-math2-21",
@@ -2310,10 +2779,10 @@
         questionType: "percentages",
         difficulty: "medium",
         passage: null,
-        stem: "The price of an electronic tablet was initially $350. During a holiday clearance event, the price was reduced by 20%. Two weeks later, the discounted price was reduced by an additional 10%. What was the final clearance price of the tablet in dollars?",
+        stem: "The price of an electronic tablet was initially $\\$350$. During a holiday clearance event, the price was reduced by 20%. Two weeks later, the discounted price was reduced by an additional 10%. What was the final clearance price of the tablet in dollars?",
         options: null,
         correctAnswer: ["252"],
-        explanation: "First discount: $$350 \\times (1 - 0.20) = \\$350 \\times 0.80 = \\$280$. Second discount: $$280 \\times (1 - 0.10) = \\$280 \\times 0.90 = \\$252$."
+        explanation: "First discount: $\\$350 \\times (1 - 0.20) = \\$350 \\times 0.80 = \\$280$. Second discount: $\\$280 \\times (1 - 0.10) = \\$280 \\times 0.90 = \\$252$."
       },
       {
         id: "m1-math2-22",
@@ -2352,7 +2821,7 @@
       "m1-rw1-05": "Focus on how the bolded sentence starts with 'However' and introduces 'embodied carbon' from steel and concrete—it challenges the simple assumption made in the first sentence.",
       "m1-rw1-06": "Compare how Text 1 views 'choice architecture' (helpful nudges) with Text 2's core ethical objection (nudges exploit cognitive vulnerabilities and treat citizens as passive subjects).",
       "m1-rw1-07": "Follow the sequence of events when a solitary empty shell appears: instead of fighting, hermit crabs line up by size in a 'vacancy chain' so several crabs upgrade shells at once.",
-      "m1-rw1-08": "Don't stop at the opening concession ('Although... castigated as an unsightly weed'); the main idea lies in how dandelion taproots aerate soil and bring up calcium and potassium.",
+      "m1-rw1-08": "Don't stop at the opening concession ('Although... castigated as an unsightly weed'); the main idea lies in how dandelion taproots aerate soil and draw calcium and minerals to the surface.",
       "m1-rw1-09": "Vance's hypothesis specifically links songbird magnetic orientation to 'cryptochrome proteins activated by short-wavelength blue light'—look for a test comparing blue light against non-blue wavelengths.",
       "m1-rw1-10": "Check both the data table and Li Chen's claim about 'municipal wastewater discharges and impervious surfaces': find the habitat linked to urban infrastructure with the highest particle count (1,350 particles/m³).",
       "m1-rw1-11": "Focus on the final pivot: isotopic analysis showed a 'carbon-14 signature consistent with terrestrial biomass rather than fossil marine clathrates', ruling out seafloor hydrates as the source.",
@@ -2390,9 +2859,9 @@
       "m1-rw2-16": "Spot the opening em-dash earlier in the clause ('atmospheric rivers—vast corridors of concentrated water...'); you must close that parenthetical interruption with a second em-dash before the verb 'are'.",
       "m1-rw2-17": "Cross out 'of bronze mirrors discovered in a Qin dynasty tomb'—the singular head noun 'A collection' is the subject and requires a singular present-tense verb.",
       "m1-rw2-18": "Ask 'What is synthesized in the liver from cholesterol?' The noun that is synthesized ('bile acids') must appear immediately after the comma.",
-      "m1-rw2-19": "The phrase 'each coated with a microscopically thin layer...' is a non-essential participial/absolute modifier describing the eighteen segments—set it off from the main clause with a simple comma.",
-      "m1-rw2-20": "In 'Neither the lead researcher nor her graduate laboratory assistants', match the verb to the closer noun phrase ('graduate laboratory assistants', plural).",
-      "m1-rw2-21": "The clause before the blank ('The expedition surveyed three treacherous mountain [routes]') is a complete independent sentence introducing three named examples—use a colon.",
+      "m1-rw2-19": "The phrase 'each equipped with cryogenic receivers...' is a non-essential participial/absolute modifier describing the sixty-six radio antennas—set it off from the main clause with a simple comma.",
+      "m1-rw2-20": "Look at the time marker 'During the 1977 Voyager Golden Record selection process' and the plural subject 'Carl Sagan and his committee members'—a completed historical action requires the finite past-tense verb 'compiled'.",
+      "m1-rw2-21": "The clause before the blank ('The expedition surveyed three treacherous mountain [passes]') is a complete independent sentence introducing three named examples—use a colon.",
       "m1-rw2-22": "Strip away 'of invasive lionfish across Caribbean coral reefs'—the singular subject is 'The rapid dispersal', which takes a singular verb ('has prompted').",
       "m1-rw2-23": "Sentence 1 highlights a hazard of liquid electrolytes (flammable), while Sentence 2 highlights how solid-state batteries replace them with safe ceramic/polymer electrolytes—choose a contrast transition.",
       "m1-rw2-24": "Sentence 2 describes Dubrovnik's 40-day quarantine policy, and Sentence 3 describes the positive outcome (continued trade and lower plague mortality)—select a cause-and-effect transition.",
@@ -2622,7 +3091,7 @@
 
           switch (qTypeObj.id) {
             case 'words-in-context': {
-              const item = vocabBank[(occ + examId * 2) % vocabBank.length];
+              const item = vocabBank[(occ + (examId - 2) * 7) % vocabBank.length];
               passage = item.text;
               stem = "Which choice completes the text with the most logical and precise word or phrase?";
               options = this.makeOptions(correct, item.word, item.distractors);
@@ -2633,25 +3102,85 @@
 
             case 'text-structure-and-purpose': {
               const list = [
-                { text: "In pelagic marine ecosystems, apex predators regulate lower trophic tiers not merely through direct consumption, but through behavioural intimidation. By creating 'landscapes of fear', predators force prey to alter foraging routes, preventing overgrazing of vulnerable seagrass meadows.", purpose: "illustrate how behavioral cues exert top-down control over ecosystem structure" },
-                { text: "Early neural network models assumed that synaptic plasticity operated as a simple Hebbian reinforcement loop: neurons that fire together wire together. However, contemporary neuromorphic research demonstrates that homeostatic synaptic scaling actively dampens runaway excitation, preserving dynamic range.", purpose: "explain how homeostatic synaptic scaling modifies earlier assumptions about neural plasticity" },
-                { text: "Comparative philologists long assumed that Proto-Indo-European expanded primarily through nomadic pastoral conquests during the Bronze Age. Yet recent archaeogenomic analyses of ancient dental calculus suggest an earlier, agrarian dispersal route coinciding with Neolithic crop cultivation.", purpose: "present archaeogenomic evidence that challenges a longstanding hypothesis regarding language dispersal" },
-                { text: "In Renaissance portraiture, painters strictly observed hierarchical perspective, depicting patrons significantly larger than attendants. Flemish painter Jan van Eyck subverted this convention by employing uniform optical realism and domestic light reflections, fundamentally democratizing visual narrative space.", purpose: "highlight an artistic innovation that broke away from conventional hierarchical perspective" },
-                { text: "Classical hydrology treated river floodplains as passive overflow channels that merely absorbed excess seasonal runoff. Modern fluvial geomorphology, by contrast, frames floodplains as active biogeochemical reactors that filter agricultural nitrates and recharge alluvial aquifers.", purpose: "contrast an outdated hydrological view of floodplains with a modern understanding of their active ecological role" },
-                { text: "When twelfth-century Iberian translators rendered Arabic astronomical treatises into Latin, they frequently retained technical loanwords such as 'zenith' and 'azimuth' where no Latin equivalents existed, permanently reshaping the lexicon of European celestial mechanics.", purpose: "describe how medieval translation practices introduced enduring Arabic terminology into European science" },
-                { text: "The following text is adapted from Edith Wharton's 1920 novel The Age of Innocence. Newland Archer walked slowly down Fifth Avenue, observing the uniform brownstone facades that lined the thoroughfare like polite sentinels. Every drawn damask curtain seemed to enforce a silent consensus that personal impulse must yield to ancestral custom.", purpose: "depict how the physical architecture of Archer's neighborhood embodies its rigid social conformity" },
-                { text: "The following text is from Emily Dickinson's poem 'There's a certain Slant of light' (c. 1861).\nThere's a certain Slant of light,\nWinter Afternoons –\nThat oppresses, like the Heft\nOf Cathedral Tunes –\nHeavenly Hurt, it gives us –\nWe can find no scar,\nBut internal difference –\nWhere the Meanings, are –", purpose: "convey how a fleeting seasonal phenomenon provokes a profound, invisible interior transformation" }
+                {
+                  text: "In pelagic marine ecosystems, apex predators regulate lower trophic tiers not merely through direct consumption, but through behavioural intimidation. By creating 'landscapes of fear', predators force prey to alter foraging routes, preventing overgrazing of vulnerable seagrass meadows.",
+                  purpose: "illustrate how behavioral cues exert top-down control over ecosystem structure",
+                  bads: [
+                    "To quantify the annual biomass of seagrass consumed by herbivorous marine fishes.",
+                    "To argue that direct predation is less common in pelagic zones than in coastal reefs.",
+                    "To explain why seagrass meadows fail to recover once apex predators are reintroduced."
+                  ]
+                },
+                {
+                  text: "Early neural network models assumed that synaptic plasticity operated as a simple Hebbian reinforcement loop: neurons that fire together wire together. However, contemporary neuromorphic research demonstrates that homeostatic synaptic scaling actively dampens runaway excitation, preserving dynamic range.",
+                  purpose: "explain how homeostatic synaptic scaling modifies earlier assumptions about neural plasticity",
+                  bads: [
+                    "To refute the claim that biological neurons communicate through electrical impulses.",
+                    "To chronicle the historical rivalry between early neurobiologists and computer scientists.",
+                    "To advocate for replacing silicon microprocessors with biological neural cultures."
+                  ]
+                },
+                {
+                  text: "Comparative philologists long assumed that Proto-Indo-European expanded primarily through nomadic pastoral conquests during the Bronze Age. Yet recent archaeogenomic analyses of ancient dental calculus suggest an earlier, agrarian dispersal route coinciding with Neolithic crop cultivation.",
+                  purpose: "present archaeogenomic evidence that challenges a longstanding hypothesis regarding language dispersal",
+                  bads: [
+                    "To catalog the phonological differences between Bronze Age and Neolithic dialects.",
+                    "To demonstrate that nomadic pastoralists lacked domesticated cereal crops.",
+                    "To question the reliability of DNA extraction from ancient skeletal remains."
+                  ]
+                },
+                {
+                  text: "In Renaissance portraiture, painters strictly observed hierarchical perspective, depicting patrons significantly larger than attendants. Flemish painter Jan van Eyck subverted this convention by employing uniform optical realism and domestic light reflections, fundamentally democratizing visual narrative space.",
+                  purpose: "highlight an artistic innovation that broke away from conventional hierarchical perspective",
+                  bads: [
+                    "To explain why Flemish patrons commissioned fewer religious portraits than Italian patrons did.",
+                    "To compare the chemical durability of oil glazes used by Jan van Eyck with earlier tempera paints.",
+                    "To criticize Renaissance art academies for neglecting geometric linear perspective."
+                  ]
+                },
+                {
+                  text: "Classical hydrology treated river floodplains as passive overflow channels that merely absorbed excess seasonal runoff. Modern fluvial geomorphology, by contrast, frames floodplains as active biogeochemical reactors that filter agricultural nitrates and recharge alluvial aquifers.",
+                  purpose: "contrast an outdated hydrological view of floodplains with a modern understanding of their active ecological role",
+                  bads: [
+                    "To propose engineering blueprints for concrete levees along agricultural riverbanks.",
+                    "To warn that alluvial aquifers are becoming permanently depleted by urban irrigation.",
+                    "To measure the seasonal velocity of snowmelt runoff in mountainous watersheds."
+                  ]
+                },
+                {
+                  text: "When twelfth-century Iberian translators rendered Arabic astronomical treatises into Latin, they frequently retained technical loanwords such as 'zenith' and 'azimuth' where no Latin equivalents existed, permanently reshaping the lexicon of European celestial mechanics.",
+                  purpose: "describe how medieval translation practices introduced enduring Arabic terminology into European science",
+                  bads: [
+                    "To argue that twelfth-century Latin scholars misunderstood basic spherical trigonometry.",
+                    "To compare the observational accuracy of Iberian astrolabes with modern telescopes.",
+                    "To trace the biographical careers of individual translators in medieval Toledo."
+                  ]
+                },
+                {
+                  text: "The following text is adapted from Edith Wharton's 1920 novel The Age of Innocence. Newland Archer walked slowly down Fifth Avenue, observing the uniform brownstone facades that lined the thoroughfare like polite sentinels. Every drawn damask curtain seemed to enforce a silent consensus that personal impulse must yield to ancestral custom.",
+                  purpose: "depict how the physical architecture of Archer's neighborhood embodies its rigid social conformity",
+                  bads: [
+                    "To praise the superior craftsmanship of nineteenth-century Manhattan residential masonry.",
+                    "To recount a specific family dispute that forced Archer to leave his ancestral home.",
+                    "To contrast the bustling commercial energy of Fifth Avenue with quiet rural estates."
+                  ]
+                },
+                {
+                  text: "The following text is from Emily Dickinson's poem 'There's a certain Slant of light' (c. 1861).\nThere's a certain Slant of light,\nWinter Afternoons –\nThat oppresses, like the Heft\nOf Cathedral Tunes –\nHeavenly Hurt, it gives us –\nWe can find no scar,\nBut internal difference –\nWhere the Meanings, are –",
+                  purpose: "convey how a fleeting seasonal phenomenon provokes a profound, invisible interior transformation",
+                  bads: [
+                    "To celebrate the comforting warmth of winter sunlight inside a historic cathedral.",
+                    "To describe the physical recovery process following a painful winter injury.",
+                    "To contrast the acoustic resonance of choral music with the silence of a snowstorm."
+                  ]
+                }
               ];
-              const item = list[(occ + examId) % list.length];
+              const item = list[(occ + (examId - 2) * 3) % list.length];
               passage = item.text;
               stem = "Which choice best states the main purpose of the text?";
-              options = this.makeOptions(correct, `To ${item.purpose}.`, [
-                `To argue that earlier theoretical models should be discarded as unscientific.`,
-                `To demonstrate that empirical field measurements consistently contradict mathematical theory.`,
-                `To propose a novel laboratory technique for analyzing historical artifacts.`
-              ]);
+              options = this.makeOptions(correct, `To ${item.purpose}.`, item.bads);
               explanation = `The text develops a thesis to ${item.purpose}. Option ${correct} is correct.`;
-              tip = `Track how the passage moves from its opening setup to its final sentence: the author's primary goal is to ${item.purpose}, rather than making extreme claims about discarding science or proposing lab techniques.`;
+              tip = `Track how the passage moves from its opening setup to its final sentence: the author's primary goal is to ${item.purpose}.`;
               break;
             }
 
@@ -2661,47 +3190,73 @@
                   t1: "Text 1\nNeoclassical economists assert that financial markets achieve instantaneous price discovery through rational expectations, where asset prices continually reflect all publicly accessible informational fundamentals.",
                   t2: "Text 2\nEmpirical behavioral finance studies demonstrate that market participants routinely exhibit heuristic anchoring and loss aversion, generating persistent speculative bubbles that depart significantly from fundamental values.",
                   topic: "market efficiency",
-                  response: "By pointing out that cognitive heuristics and behavioral biases cause real-world asset prices to diverge from theoretical fundamental values."
+                  response: "By pointing out that cognitive heuristics and behavioral biases cause real-world asset prices to diverge from theoretical fundamental values.",
+                  bads: [
+                    "By arguing that government central banks should set fixed prices for all publicly traded equities.",
+                    "By conceding that speculative bubbles occur only when public financial disclosures are delayed.",
+                    "By claiming that individual investors lack access to modern electronic brokerage platforms."
+                  ]
                 },
                 {
                   t1: "Text 1\nAstrobiologists studying methanogenesis on Enceladus argue that detected atmospheric methane plumes provide compelling circumstantial evidence of active hydrothermal microbial ecosystems beneath the moon's ice crust.",
                   t2: "Text 2\nGeochemists have synthesized abiotic serpentinization pathways in simulated high-pressure chambers, demonstrating that primordial chondritic rocks produce identical methane yields without requiring organic biological catalysis.",
                   topic: "methane origin on Enceladus",
-                  response: "By highlighting that non-biological geochemical processes can fully account for the observed methane concentrations without requiring living organisms."
+                  response: "By highlighting that non-biological geochemical processes can fully account for the observed methane concentrations without requiring living organisms.",
+                  bads: [
+                    "By denying that methane plumes have been detected in the atmosphere of Enceladus.",
+                    "By suggesting that microbial life on Enceladus resides on the surface rather than beneath the ice crust.",
+                    "By contending that high-pressure laboratory chambers cannot replicate extraterrestrial temperatures."
+                  ]
                 },
                 {
                   t1: "Text 1\nPaleontologists traditionally categorized Mesozoic pterosaurs as clumsy passive gliders that required elevated clifftops and thermal updrafts to achieve sustained airborne travel.",
                   t2: "Text 2\nHigh-resolution CT scans of fossilized pterosaur pectoral girdles revealed robust osteological attachment sites for massive flight musculature, confirming capable powered flapping flight.",
                   topic: "pterosaur flight capability",
-                  response: "By presenting anatomical fossil evidence showing pterosaurs possessed muscle attachments required for active, powered flight."
+                  response: "By presenting anatomical fossil evidence showing pterosaurs possessed muscle attachments required for active, powered flight.",
+                  bads: [
+                    "By demonstrating that Mesozoic clifftops lacked the thermal updrafts necessary for passive gliding.",
+                    "By arguing that pterosaurs were flightless aquatic predators similar to modern penguins.",
+                    "By questioning whether CT scanning can distinguish fossilized bone from surrounding sedimentary rock."
+                  ]
                 },
                 {
                   t1: "Text 1\nUrban historians have long maintained that ancient Mesopotamian city-states emerged solely through centralized royal coercion, whereby monarchs conscripted agrarian populations to dig monumental irrigation canals.",
                   t2: "Text 2\nArchaeological excavations at fourth-millennium BCE marsh settlements in southern Iraq reveal egalitarian neighborhood councils that managed localized dike networks centuries before royal palaces were constructed.",
                   topic: "Mesopotamian urbanization",
-                  response: "By citing archaeological evidence of decentralized, community-managed water infrastructure that predated monarchical rule."
+                  response: "By citing archaeological evidence of decentralized, community-managed water infrastructure that predated monarchical rule.",
+                  bads: [
+                    "By asserting that fourth-millennium BCE settlements relied entirely on dryland rainfall rather than irrigation.",
+                    "By proving that Mesopotamian monarchs built royal palaces before any irrigation canals were dug.",
+                    "By arguing that southern Iraqi marsh settlements were abandoned prior to the fourth millennium BCE."
+                  ]
                 },
                 {
                   t1: "Text 1\nMusicologists often claim that the transition from Baroque harpsichords to Classical fortepianos was driven entirely by composers demanding broader dynamic gradations between soft and loud passages.",
                   t2: "Text 2\nEconomic historians analyzing eighteenth-century guild ledgers show that European instrument makers shifted to hammer-action fortepianos primarily because cast-iron frame innovations slashed manufacturing labor costs by forty percent.",
                   topic: "fortepiano adoption",
-                  response: "By arguing that manufacturing cost reductions and industrial frame innovations played a decisive role alongside aesthetic preferences."
+                  response: "By arguing that manufacturing cost reductions and industrial frame innovations played a decisive role alongside aesthetic preferences.",
+                  bads: [
+                    "By maintaining that Baroque harpsichords were capable of wider dynamic gradations than Classical fortepianos.",
+                    "By showing that eighteenth-century composers preferred composing for pipe organs rather than keyboard instruments.",
+                    "By disputing the authenticity of eighteenth-century European instrument-making guild ledgers."
+                  ]
                 },
                 {
                   t1: "Text 1\nImmunologists long believed that adaptive immune memory was restricted exclusively to jawed vertebrates possessing specialized T-cell and B-cell lymphocytes.",
                   t2: "Text 2\nRecent invertebrate studies show that sea urchins and copepods prime their innate macrophage-like cells via epigenetic histone modifications, mounting accelerated secondary defenses upon re-exposure to specific bacterial pathogens.",
                   topic: "invertebrate immune memory",
-                  response: "By demonstrating that invertebrates achieve pathogen-specific immune priming through epigenetic modifications of innate immune cells."
+                  response: "By demonstrating that invertebrates achieve pathogen-specific immune priming through epigenetic modifications of innate immune cells.",
+                  bads: [
+                    "By showing that sea urchins and copepods produce specialized T-cell and B-cell lymphocytes.",
+                    "By claiming that jawed vertebrates lack epigenetic histone modification pathways.",
+                    "By arguing that invertebrates are rarely exposed to recurring bacterial pathogens in marine habitats."
+                  ]
                 }
               ];
-              const item = pairs[(occ + examId) % pairs.length];
+              const item = pairs[(occ + (examId - 2) * 5) % pairs.length];
               passage = `${item.t1}\n\n${item.t2}`;
               stem = `Based on the texts, how would the author of Text 2 most likely respond to the assertion in Text 1 regarding ${item.topic}?`;
-              options = this.makeOptions(correct, item.response, [
-                `By conceding that theoretical predictions are always superior to empirical laboratory simulations.`,
-                `By urging researchers to discontinue spectroscopic data collection until surface probes land.`,
-                `By claiming that the conclusions in Text 1 were fabricated by earlier researchers.`
-              ]);
+              options = this.makeOptions(correct, item.response, item.bads);
               explanation = `Text 2 offers alternative mechanisms or empirical proof that challenge Text 1. Option ${correct} is correct.`;
               tip = `Compare both texts on "${item.topic}": isolate the core assumption in Text 1, then identify the specific empirical evidence or alternative mechanism that Text 2 introduces to challenge it.`;
               break;
@@ -2709,25 +3264,85 @@
 
             case 'central-ideas-and-details': {
               const list = [
-                { text: "Urban soil biomes exhibit sharply diminished bacterial phylogenetic diversity compared to adjacent rural forest soils. While rural soils maintain dense fungal mycorrhizae that buffer against heavy metal leaching, urban soils are dominated by fast-growing ruderal bacterial strains that offer minimal bioremediation capacity.", idea: "urban soils suffer from functional bioremediation deficits due to the loss of diverse mycorrhizal networks" },
-                { text: "Francesco Borromini's design for San Carlo alle Quattro Fontane broke radically from Renaissance proportional orthodoxy by replacing static Euclidean circles and squares with dynamic undulating concave-convex wall surfaces that manipulate natural light to simulate architectural movement.", idea: "Borromini's architectural innovation lay in using undulating geometric curves and light to create an illusion of motion" },
-                { text: "Deep-sea hydrothermal vent communities do not rely on photosynthetic solar energy; instead, giant tube worms host endosymbiotic chemoautotrophic bacteria that oxidize dissolved hydrogen sulfide bubbling from tectonic fissures, establishing a primary trophic foundation independent of sunlight.", idea: "hydrothermal vent ecosystems thrive independently of solar energy by relying on chemoautotrophic sulfide oxidation" },
-                { text: "In the 1920s, astronomer Cecilia Payne-Gaposchkin analyzed stellar absorption spectra and demonstrated that stars are composed overwhelmingly of hydrogen and helium rather than the heavy element mix found in Earth's crust, overturning the prevailing consensus of early astrophysics.", idea: "Payne-Gaposchkin revolutionized astrophysics by proving that stars consist primarily of hydrogen and helium" },
-                { text: "Arctic permafrost soils store nearly twice as much organic carbon as currently resides in Earth's atmosphere. As polar amplification accelerates seasonal thaw depths, dormant methanogenic archaea metabolize ancient peat deposits, creating a self-reinforcing feedback loop of greenhouse gas emissions.", idea: "thawing Arctic permafrost activates microbial decomposition that releases stored carbon in a warming feedback loop" },
-                { text: "Unlike phonetic scripts where symbols represent spoken sounds, ancient Andean khipus encoded administrative census and tribute data through three-dimensional sequences of dyed camelid fiber cords, varying knot direction, ply twist, and tier hierarchy.", idea: "Andean khipus recorded complex administrative information through tactile three-dimensional cord and knot configurations" },
-                { text: "The following text is adapted from Willa Cather's 1918 novel My Ántonia. As the train carried Jim Burden across the Nebraska prairie at dusk, the rolling homesteads dissolved into an immense, unbroken expanse of copper-colored grass that seemed to drink in the fading twilight rather than reflect it.", idea: "the vast Nebraska prairie struck Jim Burden as an overwhelming, absorptive landscape" },
-                { text: "Medieval Islamic hospital complexes, known as bimaristans, operated as secular charitable institutions open to all patients regardless of gender or socioeconomic status. In addition to surgical wards and pharmacies, bimaristans maintained landscaped courtyards with acoustic water fountains designed to alleviate psychological distress during convalescence.", idea: "medieval bimaristans combined comprehensive medical care with environmental features intended to support patients' psychological recovery" }
+                {
+                  text: "During the Roman Empire, glassmakers across provincial workshops in Gaul and the Rhineland did not melt local sand from scratch; instead, they imported raw natron glass chunks smelted in massive primary tank furnaces in Egypt and the Levant, remelting those cullet blocks into local vessel forms.",
+                  idea: "Roman provincial glassworkers relied on importing pre-smelted raw glass from eastern Mediterranean production centers for local shaping",
+                  bads: [
+                    "Gaulish and Rhineland glassmakers invented primary tank furnaces that surpassed Egyptian production capacity.",
+                    "Roman glass vessels were used exclusively by imperial elites because natron flux was prohibitively scarce.",
+                    "Eastern Mediterranean glass workshops copied vessel shapes originally pioneered by artisans in northern Gaul."
+                  ]
+                },
+                {
+                  text: "Francesco Borromini's design for San Carlo alle Quattro Fontane broke radically from Renaissance proportional orthodoxy by replacing static Euclidean circles and squares with dynamic undulating concave-convex wall surfaces that manipulate natural light to simulate architectural movement.",
+                  idea: "Borromini's architectural innovation lay in using undulating geometric curves and light to create an illusion of motion",
+                  bads: [
+                    "Borromini adhered strictly to Renaissance proportional rules by designing facades based on static squares.",
+                    "San Carlo alle Quattro Fontane was the first Roman church constructed entirely without natural interior lighting.",
+                    "Renaissance architects rejected Euclidean geometry in favor of irregular concave-convex floor plans."
+                  ]
+                },
+                {
+                  text: "Abyssal polymetallic nodules form on the deep ocean floor at one of the slowest geological rates on Earth, accumulating concentric layers of iron and manganese hydroxides around shark teeth or basalt fragments at a rate of just a few millimeters per million years.",
+                  idea: "Deep-sea polymetallic nodules grow extraordinarily slowly as mineral layers precipitate around seafloor nuclei over millions of years",
+                  bads: [
+                    "Polymetallic nodules dissolve rapidly whenever deep-ocean currents expose them to basaltic rock fragments.",
+                    "Volcanic eruptions on the abyssal plain deposit several meters of manganese hydroxide every century.",
+                    "Marine sharks depend on iron-rich seafloor nodules to mineralize their replacement teeth."
+                  ]
+                },
+                {
+                  text: "In the 1920s, astronomer Cecilia Payne-Gaposchkin analyzed stellar absorption spectra and demonstrated that stars are composed overwhelmingly of hydrogen and helium rather than the heavy element mix found in Earth's crust, overturning the prevailing consensus of early astrophysics.",
+                  idea: "Payne-Gaposchkin revolutionized astrophysics by proving that stars consist primarily of hydrogen and helium",
+                  bads: [
+                    "Payne-Gaposchkin confirmed that stellar atmospheres share the same heavy-element composition as Earth's crust.",
+                    "Early twentieth-century astrophysicists lacked spectrographs capable of detecting light from distant stars.",
+                    "Hydrogen and helium are gradually converted into terrestrial crust minerals as stars cool over time."
+                  ]
+                },
+                {
+                  text: "Arctic permafrost soils store nearly twice as much organic carbon as currently resides in Earth's atmosphere. As polar amplification accelerates seasonal thaw depths, dormant methanogenic archaea metabolize ancient peat deposits, creating a self-reinforcing feedback loop of greenhouse gas emissions.",
+                  idea: "Thawing Arctic permafrost activates microbial decomposition that releases stored carbon in a warming feedback loop",
+                  bads: [
+                    "Methanogenic archaea in Arctic peat deposits absorb atmospheric carbon dioxide when permafrost freezes.",
+                    "Arctic soils contain less organic carbon than temperate agricultural topsoils do.",
+                    "Seasonal permafrost thawing has permanently halted microbial metabolism across polar ecosystems."
+                  ]
+                },
+                {
+                  text: "Unlike phonetic scripts where symbols represent spoken sounds, ancient Andean khipus encoded administrative census and tribute data through three-dimensional sequences of dyed camelid fiber cords, varying knot direction, ply twist, and tier hierarchy.",
+                  idea: "Andean khipus recorded complex administrative information through tactile three-dimensional cord and knot configurations",
+                  bads: [
+                    "Andean khipus functioned as an alphabetic phonetic script in which each knot represented a spoken vowel.",
+                    "Camelid fiber cords were used solely for ceremonial garments rather than administrative record-keeping.",
+                    "Spanish colonial chroniclers successfully deciphered every phonetic symbol in the Andean khipu system."
+                  ]
+                },
+                {
+                  text: "The following text is adapted from Willa Cather's 1918 novel My Ántonia. As the train carried Jim Burden across the Nebraska prairie at dusk, the rolling homesteads dissolved into an immense, unbroken expanse of copper-colored grass that seemed to drink in the fading twilight rather than reflect it.",
+                  idea: "The vast Nebraska prairie struck Jim Burden as an overwhelming, absorptive landscape at dusk",
+                  bads: [
+                    "Jim Burden was disappointed by the crowded industrial towns bordering the Nebraska railway line.",
+                    "The bright evening sunlight reflected off the prairie grass and illuminated the train compartment.",
+                    "Jim Burden eagerly recognized the familiar fences of his childhood homestead from the train window."
+                  ]
+                },
+                {
+                  text: "Medieval Islamic hospital complexes, known as bimaristans, operated as secular charitable institutions open to all patients regardless of gender or socioeconomic status. In addition to surgical wards and pharmacies, bimaristans maintained landscaped courtyards with acoustic water fountains designed to alleviate psychological distress during convalescence.",
+                  idea: "Medieval bimaristans combined inclusive medical care with environmental features intended to support patients' psychological recovery",
+                  bads: [
+                    "Medieval bimaristans restricted surgical treatment to royal patrons who funded courtyard construction.",
+                    "Physicians in medieval bimaristans relied on acoustic water fountains as a substitute for pharmaceutical remedies.",
+                    "Bimaristans were religious monasteries located in remote mountain regions far from urban centers."
+                  ]
+                }
               ];
-              const item = list[(occ + examId) % list.length];
+              const item = list[(occ + (examId - 2) * 3) % list.length];
               passage = item.text;
               stem = "Which choice best states the main idea of the text?";
-              options = this.makeOptions(correct, `That ${item.idea}.`, [
-                `That earlier Renaissance architects were technologically incapable of constructing non-linear walls.`,
-                `That rural soil ecology remains completely unaffected by global agricultural fertilizers.`,
-                `That municipal planners should prioritize aesthetic ornamentation over functional ecological resilience.`
-              ]);
-              explanation = `The text is primarily devoted to explaining how ${item.idea}. Option ${correct} is correct.`;
-              tip = `Focus on the passage's central takeaway—that ${item.idea}—and eliminate choices that introduce unrelated topics or unsupported absolutes.`;
+              options = this.makeOptions(correct, `${item.idea}.`, item.bads);
+              explanation = `The text is primarily devoted to explaining how ${item.idea.charAt(0).toLowerCase() + item.idea.slice(1)}. Option ${correct} is correct.`;
+              tip = `Focus on the passage's central takeaway—that ${item.idea.charAt(0).toLowerCase() + item.idea.slice(1)}—and eliminate choices that contradict the passage or introduce unsupported claims.`;
               break;
             }
 
@@ -2735,6 +3350,7 @@
               const list = [
                 {
                   claim: "Zora Neale Hurston's folk tales operate as subversive rhetorical allegories that cleverly invert power asymmetries between agrarian laborers and landowners.",
+                  passage: "In a study of early twentieth-century Southern folklore, literary historians analyzed Zora Neale Hurston's anthropological collections from Eatonville, Florida. The scholars claim that Zora Neale Hurston's folk tales operate as subversive rhetorical allegories that cleverly invert power asymmetries between agrarian laborers and landowners.",
                   quote: '"The seemingly harmless trickster rabbit in plantation lore invariably outwits the predatory wolf not through physical prowess, but by turning the master\'s own rigid codes against him."',
                   bads: [
                     '"Field hands gathered after dusk around the communal fire to sing spiritual ballads that recounted historical biblical migrations."',
@@ -2743,7 +3359,8 @@
                   ]
                 },
                 {
-                  claim: "Ornithologists hypothesize that urban songbirds actively alter the pitch of their territorial songs to prevent acoustic masking by low-frequency automotive traffic noise.",
+                  claim: "urban songbirds actively alter the pitch of their territorial songs to prevent acoustic masking by low-frequency automotive traffic noise.",
+                  passage: "Ambient noise from highway corridors overlaps with the acoustic frequencies many woodland passerines use to attract mates and defend territories. Ornithologists hypothesize that urban songbirds actively alter the pitch of their territorial songs to prevent acoustic masking by low-frequency automotive traffic noise.",
                   quote: '"Recordings across twelve metropolitan parks revealed that European blackbirds sang at a minimum frequency 200 Hz higher than conspecifics inhabiting quiet rural woodlands."',
                   bads: [
                     '"Urban bird populations experienced higher nest predation rates due to the abundance of feral domestic cats."',
@@ -2752,7 +3369,8 @@
                   ]
                 },
                 {
-                  claim: "Marine biologists contend that reef-building corals can transiently increase their thermal tolerance by shuffling their internal clades of symbiotic dinoflagellates toward heat-resistant strains.",
+                  claim: "reef-building corals can transiently increase their thermal tolerance by shuffling their internal clades of symbiotic dinoflagellates toward heat-resistant strains.",
+                  passage: "While severe marine heatwaves frequently trigger coral bleaching, certain scleractinian colonies recover rapidly even when elevated sea-surface temperatures persist. Marine biologists contend that reef-building corals can transiently increase their thermal tolerance by shuffling their internal clades of symbiotic dinoflagellates toward heat-resistant strains.",
                   quote: '"Following the 2022 marine heatwave, Acropora colonies that survived bleaching exhibited an 85% dominance of thermotolerant Durusdinium trenchii symbionts, compared to 10% prior to warming."',
                   bads: [
                     '"Calcification rates in shallow-water corals declined by 18% when seawater pH dropped below 7.8 in laboratory tanks."',
@@ -2761,7 +3379,8 @@
                   ]
                 },
                 {
-                  claim: "Economic historians argue that the expansion of nineteenth-century British railway networks reduced regional grain price volatility by enabling rapid arbitrage between surplus and deficit counties.",
+                  claim: "the expansion of nineteenth-century British railway networks reduced regional grain price volatility by enabling rapid arbitrage between surplus and deficit counties.",
+                  passage: "Prior to steam locomotion, localized crop failures in inland English parishes frequently caused severe price spikes because overland wagon transport was slow and costly. Economic historians argue that the expansion of nineteenth-century British railway networks reduced regional grain price volatility by enabling rapid arbitrage between surplus and deficit counties.",
                   quote: '"Between 1840 and 1865, the standard deviation of wheat prices across English market towns connected by rail fell by 62%, whereas unlinked parishes saw no price convergence."',
                   bads: [
                     '"Steam locomotive boilers required high-grade Welsh anthracite coal to maintain optimal operating steam pressures."',
@@ -2770,7 +3389,8 @@
                   ]
                 },
                 {
-                  claim: "Neuroscientists propose that slow-wave non-REM sleep facilitates memory consolidation by synchronizing hippocampal sharp-wave ripples with neocortical spindle oscillations.",
+                  claim: "slow-wave non-REM sleep facilitates memory consolidation by synchronizing hippocampal sharp-wave ripples with neocortical spindle oscillations.",
+                  passage: "During deep sleep, recently encoded episodic experiences are transferred from temporary storage in the hippocampus to long-term networks in the cerebral cortex. Neuroscientists propose that slow-wave non-REM sleep facilitates memory consolidation by synchronizing hippocampal sharp-wave ripples with neocortical spindle oscillations.",
                   quote: '"Participants whose slow-wave sleep was augmented via phase-locked acoustic pulses demonstrated a 40% improvement in declarative word-pair recall the following morning along with coupled hippocampal-cortical activity."',
                   bads: [
                     '"Subjects deprived of REM sleep reported heightened emotional reactivity when viewing ambiguous facial expressions."',
@@ -2779,7 +3399,8 @@
                   ]
                 },
                 {
-                  claim: "Botanists hypothesize that alpine cushion plants facilitate the survival of less hardy herbaceous species by moderating extreme microclimatic soil temperature fluctuations.",
+                  claim: "alpine cushion plants facilitate the survival of less hardy herbaceous species by moderating extreme microclimatic soil temperature fluctuations.",
+                  passage: "High-elevation mountain screes experience freezing nocturnal winds and intense midday solar radiation that kill most exposed seedlings. Botanists hypothesize that alpine cushion plants facilitate the survival of less hardy herbaceous species by moderating extreme microclimatic soil temperature fluctuations.",
                   quote: '"Sensors placed beneath Azorella compacta mats at 4,500 meters elevation recorded soil temperatures that remained 6°C warmer at night and 4°C cooler at midday than adjacent bare scree, harboring triple the seedling density."',
                   bads: [
                     '"High-altitude plants often develop thick waxy cuticles and dense trichome hairs to minimize ultraviolet radiation damage."',
@@ -2788,9 +3409,9 @@
                   ]
                 }
               ];
-              const item = list[(occ + examId) % list.length];
-              passage = `Researchers investigated the claim that ${item.claim}`;
-              stem = "Which finding, if true, would most directly support the researchers' claim?";
+              const item = list[(occ + (examId - 2) * 5) % list.length];
+              passage = item.passage;
+              stem = "Which finding, if true, would most directly support the hypothesis?";
               options = this.makeOptions(correct, item.quote, item.bads);
               explanation = `The correct quotation provides direct, empirical evidence substantiating the claim. Option ${correct} is correct.`;
               tip = `Identify the two linked variables in the claim ("${item.claim}") and pick the empirical finding that directly demonstrates both cause and effect.`;
@@ -2860,7 +3481,7 @@
                   vB: [67 - examId, 62 - examId, 56 - examId, 47 - examId]
                 }
               ];
-              const t = tables[(occ + examId) % tables.length];
+              const t = tables[(occ + (examId - 2) * 5) % tables.length];
               passage = `${t.header}:\nYear | ${t.colA} (A) | ${t.colB} (B)\n${t.yrs[0]} | ${t.vA[0]}${t.unit} | ${t.vB[0]}${t.unit}\n${t.yrs[1]} | ${t.vA[1]}${t.unit} | ${t.vB[1]}${t.unit}\n${t.yrs[2]} | ${t.vA[2]}${t.unit} | ${t.vB[2]}${t.unit}\n${t.yrs[3]} | ${t.vA[3]}${t.unit} | ${t.vB[3]}${t.unit}\n\nResearchers projected that ${t.colA} would surpass ${t.colB} by ${t.yrs[2]}.`;
               stem = "Which choice best uses data from the table to support the researchers' projection?";
               const correctText = `In ${t.yrs[2]}, ${t.colA} reached ${t.vA[2]}${t.unit}, exceeding ${t.colB} (${t.vB[2]}${t.unit}) for the first time in the recorded period.`;
@@ -2877,38 +3498,64 @@
             case 'inferences': {
               const list = [
                 {
-                  premise: "Infants exposed to bilingual environments distinguish phonemic contrasts across multiple language families up to twelve months of age, whereas monolingual infants undergo perceptual narrowing by eight months, losing the ability to differentiate non-native phonemes.",
-                  conclusion: "perceptual narrowing is an environmentally conditioned neural tuning process rather than an unalterable biological timeline."
+                  premise: "Infants exposed to bilingual environments distinguish phonemic contrasts across multiple language families up to twelve months of age, whereas monolingual infants undergo perceptual narrowing by eight months, losing the ability to differentiate non-native phonemes. This finding suggests that ________",
+                  conclusion: "perceptual narrowing is an environmentally conditioned neural tuning process rather than an unalterable biological timeline.",
+                  bads: [
+                    "monolingual infants acquire native vocabulary more slowly than bilingual infants during their second year.",
+                    "infants cannot distinguish any spoken consonant sounds prior to eight months of age.",
+                    "bilingual exposure permanently prevents children from mastering native phonetic pronunciation."
+                  ]
                 },
                 {
-                  premise: "Corvids inhabiting urban environments solve novel multi-stage puzzle boxes significantly faster than rural conspecifics, yet both groups perform identically on basic associative foraging tasks.",
-                  conclusion: "urban environments specifically foster elevated behavioral flexibility and cognitive innovation rather than generalized sensory improvements."
+                  premise: "Corvids inhabiting urban environments solve novel multi-stage puzzle boxes significantly faster than rural conspecifics, yet both groups perform identically on basic associative foraging tasks. Consequently, behavioral ecologists infer that ________",
+                  conclusion: "urban environments specifically foster elevated behavioral flexibility and cognitive innovation rather than generalized sensory improvements.",
+                  bads: [
+                    "rural corvids suffer from nutritional deficiencies that impair basic associative memory.",
+                    "urban corvids rely exclusively on human food waste rather than natural foraging.",
+                    "multi-stage puzzle boxes measure visual acuity rather than problem-solving capacity."
+                  ]
                 },
                 {
-                  premise: "Plants colonized by arbuscular mycorrhizal fungi allocate up to twenty percent of their photosynthetically fixed carbon to the root microbiome, yet cease this transfer within hours if the fungal partner is experimentally prevented from delivering phosphorus.",
-                  conclusion: "host plants actively monitor nutrient delivery and enforce reciprocal resource exchange with their fungal symbionts."
+                  premise: "European cuttlefish (Sepia officinalis) rapidly alter their skin texture and pigment chromatophores to match checkerboard laboratory substrates despite possessing only a single type of monochromatic photoreceptor in their retinas. This observation implies that ________",
+                  conclusion: "cuttlefish achieve high-contrast background matching through mechanisms that do not depend on retinal color vision.",
+                  bads: [
+                    "cuttlefish cannot alter their skin patterns when placed on natural pebble substrates.",
+                    "monochromatic photoreceptors allow cuttlefish to perceive ultraviolet and infrared wavelengths.",
+                    "chromatophore expansion is controlled by ambient water temperature rather than visual input."
+                  ]
                 },
                 {
-                  premise: "Glass artifacts excavated from ninth-century Viking trading ports in Scandinavia contain trace neodymium-strontium isotope ratios characteristic of Mesopotamian silica sands, even though Scandinavian artisans lacked high-temperature kilns required to melt raw quartz.",
-                  conclusion: "Viking glassmakers imported pre-manufactured raw glass ingots via long-distance Eurasian trade routes and remelted them locally into beads."
+                  premise: "Glass artifacts excavated from ninth-century Viking trading ports in Scandinavia contain trace neodymium-strontium isotope ratios characteristic of Mesopotamian silica sands, even though Scandinavian artisans lacked high-temperature kilns required to melt raw quartz. Archaeologists therefore conclude that ________",
+                  conclusion: "Viking glassmakers imported pre-manufactured raw glass ingots via long-distance Eurasian trade routes and remelted them locally into beads.",
+                  bads: [
+                    "Mesopotamian glassmakers migrated to Scandinavia during the ninth century to construct high-temperature kilns.",
+                    "Scandinavian quartz deposits share identical neodymium-strontium isotope ratios with Mesopotamian river sands.",
+                    "ninth-century Viking settlements used glass beads solely as ballast in merchant ships."
+                  ]
                 },
                 {
-                  premise: "Bumblebees foraging on flowers dusted with sublethal concentrations of neonicotinoid pesticides collect pollen at normal speeds during the first hour of exposure, but fail to learn novel floral scent associations over subsequent days.",
-                  conclusion: "short-term acute toxicity assays may overlook chronic neurobehavioral impairments that degrade long-term colony foraging efficiency."
+                  premise: "Bumblebees foraging on flowers dusted with sublethal concentrations of neonicotinoid pesticides collect pollen at normal speeds during the first hour of exposure, but fail to learn novel floral scent associations over subsequent days. This pattern indicates that ________",
+                  conclusion: "short-term acute toxicity assays may overlook chronic neurobehavioral impairments that degrade long-term colony foraging efficiency.",
+                  bads: [
+                    "neonicotinoid pesticides increase the concentration of nectar produced by treated wildflowers.",
+                    "bumblebees rely exclusively on petal color rather than floral scent when locating pollen.",
+                    "sublethal pesticide exposure immediately paralyzes the flight muscles of foraging bumblebees."
+                  ]
                 },
                 {
-                  premise: "When atmospheric carbon dioxide levels were experimentally doubled inside free-air enrichment rings, temperate oak trees increased their photosynthetic rates by thirty percent during year one, but downregulated rubisco enzyme synthesis by year four until net growth matched ambient control plots.",
-                  conclusion: "long-term physiological acclimation and soil nutrient bottlenecks constrain the capacity of mature forests to act as indefinite carbon sinks."
+                  premise: "When atmospheric carbon dioxide levels were experimentally doubled inside free-air enrichment rings, temperate oak trees increased their photosynthetic rates by thirty percent during year one, but downregulated rubisco enzyme synthesis by year four until net growth matched ambient control plots. Researchers therefore conclude that ________",
+                  conclusion: "long-term physiological acclimation and soil nutrient bottlenecks constrain the capacity of mature forests to act as indefinite carbon sinks.",
+                  bads: [
+                    "temperate oak trees cease photosynthesis entirely when atmospheric carbon dioxide exceeds ambient levels.",
+                    "rubisco enzyme synthesis increases indefinitely in response to elevated atmospheric carbon dioxide.",
+                    "first-year sapling growth measurements accurately predict multi-decade forest carbon sequestration."
+                  ]
                 }
               ];
-              const item = list[(occ + examId) % list.length];
-              passage = `${item.premise} Because localized empirical observations drive these distinctions, researchers conclude that ________`;
+              const item = list[(occ + (examId - 2) * 5) % list.length];
+              passage = item.premise;
               stem = "Which choice most logically completes the text?";
-              options = this.makeOptions(correct, item.conclusion, [
-                `rural populations suffer from permanent neurological deficits in spatial orientation during adulthood.`,
-                `juvenile organisms are incapable of recognizing environmental cues prior to reaching maturity.`,
-                `physiological processing pathways evolve completely independent of external ecological stimuli.`
-              ]);
+              options = this.makeOptions(correct, item.conclusion, item.bads);
               explanation = `The premises directly substantiate that ${item.conclusion} Option ${correct} is correct.`;
               tip = `Synthesize the contrast in the premise ("${item.premise.slice(0, 85)}...") and select the conclusion that follows strictly from those two observations without adding unsupported extremes.`;
               break;
@@ -2916,18 +3563,18 @@
 
             case 'boundaries': {
               const list = [
-                { text: "Renowned botanist Dr. Carlos Ortiz spent six years cataloging rare epiphytes in the cloud forest ________ his comprehensive taxonomic monograph later revolutionized tropical canopy ecology.", mark: ";", bads: [",", "and", "—where"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
-                { text: "The engineering team evaluated three distinct composite alloys for the aircraft fuselage ________ each material exhibited high tensile durability under standard thermal pressurization.", mark: ";", bads: [",", "which", "—because"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
-                { text: "Architect Maya Lin was chosen from over one thousand anonymous design submissions ________ her minimalist black granite wall design remains one of the most visited public monuments in the nation.", mark: ";", bads: [",", "whose", "—although"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
-                { text: "Marine glaciologists deployed autonomous underwater vehicles beneath the Thwaites Ice Shelf ________ the submersible sensors mapped previously unknown warm-water cavity channels.", mark: ";", bads: [",", "while", "—which"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
-                { text: "Classical philologist Alice Kober meticulously compiled over 180,000 paper slip index cards of Minoan Linear B inscriptions ________ her inflectional grid triplets laid the essential groundwork for Michael Ventris's decipherment.", mark: ";", bads: [",", "and", "—whereby"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
-                { text: "Geothermal plants in Iceland inject captured carbon dioxide into porous basaltic formations ________ the dissolved gas reacts with calcium and magnesium silicates to mineralize into solid carbonate rock within two years.", mark: ";", bads: [",", "which", "—since"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
+                { text: "Renowned botanist Dr. Carlos Ortiz spent six years cataloging rare epiphytes in the cloud ________ his comprehensive taxonomic monograph later revolutionized tropical canopy ecology.", mark: "forest;", bads: ["forest,", "forest and", "forest—where"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
+                { text: "The engineering team evaluated three distinct composite alloys for the aircraft ________ each material exhibited high tensile durability under standard thermal pressurization.", mark: "fuselage;", bads: ["fuselage,", "fuselage, which", "fuselage—because"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
+                { text: "Architect Maya Lin was chosen from over one thousand anonymous design ________ her minimalist black granite wall design remains one of the most visited public monuments in the nation.", mark: "submissions;", bads: ["submissions,", "submissions, whose", "submissions—although"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
+                { text: "Marine glaciologists deployed autonomous underwater vehicles beneath the Thwaites Ice ________ the submersible sensors mapped previously unknown warm-water cavity channels.", mark: "Shelf;", bads: ["Shelf,", "Shelf, while", "Shelf—which"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
+                { text: "Classical philologist Alice Kober meticulously compiled over 180,000 paper slip index cards of Minoan Linear B ________ her inflectional grid triplets laid the essential groundwork for Michael Ventris's decipherment.", mark: "inscriptions;", bads: ["inscriptions,", "inscriptions and", "inscriptions—whereby"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
+                { text: "Geothermal plants in Iceland inject captured carbon dioxide into porous basaltic ________ the dissolved gas reacts with calcium and magnesium silicates to mineralize into solid carbonate rock within two years.", mark: "formations;", bads: ["formations,", "formations, which", "formations—since"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." },
                 { text: "Deep-sea coral reefs rely on three primary environmental factors to thrive in cold abyssal ________ steady benthic currents, hard rocky substrates, and continuous marine snow.", mark: "waters:", bads: ["waters;", "waters, including:", "waters"], rule: "A colon is used after a complete independent clause to introduce an explanatory list of three items." },
-                { text: "Paleobotanist Estella Leopold reconstructed Cenozoic climate shifts by analyzing fossilized pollen — microscopic grains whose tough outer walls resist decay for millions of ________ in ancient lakebed sediments.", mark: "years —", bads: ["years,", "years;", "years:"], rule: "A parenthetical appositive opened with an em-dash ('— microscopic grains...') must be closed with a matching em-dash." },
-                { text: "Although seventeenth-century microscopist Antonie van Leeuwenhoek lacked formal university training ________ his handcrafted single-lens instruments achieved magnifications exceeding two hundredfold.", mark: ", his", bads: ["; his", "— his", "his"], rule: "An introductory dependent clause ('Although...') must be separated from the following main independent clause by a comma." },
-                { text: "While excavating the Neolithic settlement of Çatalhöyük, archaeologists uncovered mudbrick dwellings entered exclusively through rooftop openings ________ the tightly packed houses shared contiguous walls without ground-level streets.", mark: ";", bads: [",", "and", "—where"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." }
+                { text: "Paleobotanist Estella Leopold reconstructed Cenozoic climate shifts by analyzing fossilized pollen—microscopic grains whose tough outer walls resist decay for millions of ________ in ancient lakebed sediments.", mark: "years—", bads: ["years,", "years;", "years:"], rule: "A parenthetical appositive opened with an em-dash ('—microscopic grains...') must be closed with a matching em-dash." },
+                { text: "Although seventeenth-century microscopist Antonie van Leeuwenhoek lacked formal university ________ his handcrafted single-lens instruments achieved magnifications exceeding two hundredfold.", mark: "training,", bads: ["training;", "training—", "training"], rule: "An introductory dependent clause ('Although...') must be separated from the following main independent clause by a comma." },
+                { text: "While excavating the Neolithic settlement of Çatalhöyük, archaeologists uncovered mudbrick dwellings entered exclusively through rooftop ________ the tightly packed houses shared contiguous walls without ground-level streets.", mark: "openings;", bads: ["openings,", "openings and", "openings—where"], rule: "Joining two complete independent clauses without a coordinating conjunction requires a semicolon." }
               ];
-              const item = list[(occ + examId) % list.length];
+              const item = list[(occ + (examId - 2) * 7) % list.length];
               passage = item.text;
               stem = "Which choice completes the text so that it conforms to the conventions of Standard English?";
               options = this.makeOptions(correct, item.mark, item.bads);
@@ -2969,7 +3616,7 @@
                   rule: "The head noun of the subject phrase is 'A series' (singular), which requires the singular auxiliary verb 'has'."
                 },
                 {
-                  text: "The presence of microscopic zircon crystals in Western Australian jack hills conglomerates ________ that liquid water existed on Earth's surface over four billion years ago.",
+                  text: "The presence of microscopic zircon crystals in Western Australian Jack Hills conglomerates ________ that liquid water existed on Earth's surface over four billion years ago.",
                   verb: "indicates",
                   bads: ["indicate", "are indicating", "have indicated"],
                   rule: "The singular subject 'The presence' governs the verb, requiring the singular form 'indicates'."
@@ -2987,7 +3634,7 @@
                   rule: "The past-time anchor 'During the late Permian period' requires the simple past-tense verb 'released'."
                 }
               ];
-              const item = list[(occ + examId) % list.length];
+              const item = list[(occ + (examId - 2) * 5) % list.length];
               passage = item.text;
               stem = "Which choice completes the text so that it conforms to the conventions of Standard English?";
               options = this.makeOptions(correct, item.verb, item.bads);
@@ -3041,13 +3688,13 @@
                   rel: "exemplification"
                 },
                 {
-                  text: "Traditional dendrochronology measures annual tree-ring widths to reconstruct past precipitation cycles in temperate forests. Tropical trees often lack distinct seasonal growth rings due to uniform year-round warmth. ________, paleoclimatologists analyze oxygen-18 isotope ratios within tropical wood cellulose to track historical monsoon intensity.",
+                  text: "Polar ice-core drilling reconstructs atmospheric greenhouse gas concentrations over the past eight hundred thousand years by analyzing trapped air bubbles. Glacial ice sheets do not survive beyond the Pleistocene epoch in low-latitude basins. ________, paleoclimatologists examine boron-to-calcium ratios in fossilized deep-sea foraminifera shells to reconstruct Cenozoic ocean temperatures.",
                   word: "Instead,",
                   bads: ["Similarly,", "For instance,", "Furthermore,"],
                   rel: "alternative method"
                 }
               ];
-              const item = list[(occ + examId) % list.length];
+              const item = list[(occ + (examId - 2) * 5) % list.length];
               passage = item.text;
               stem = "Which choice completes the text with the most logical transition?";
               options = this.makeOptions(correct, item.word, item.bads);
@@ -3060,13 +3707,13 @@
             default: {
               const list = [
                 {
-                  notes: "• The James Webb Space Telescope (JWST) was launched in December 2021 to observe infrared radiation from the earliest galaxies.\n• Unlike the Hubble Space Telescope, which operates primarily in ultraviolet and visible light, JWST utilizes a 6.5-meter gold-coated beryllium mirror.\n• In 2023, JWST detected candidate galaxy JADES-GS-z14-0, dating to just 290 million years after the Big Bang.\n• This spectroscopic detection broke the previous cosmological distance record established by Hubble.",
-                  goal: "emphasize a contrast between the capabilities of Hubble and JWST",
-                  opt: "While Hubble observes primarily in ultraviolet and visible light, JWST utilizes an infrared-optimized 6.5-meter mirror capable of detecting galaxies from just 290 million years after the Big Bang.",
+                  notes: "• Between 850 and 1150 CE, Ancestral Puebloan builders in Chaco Canyon, New Mexico, constructed monumental multi-story sandstone 'great houses' such as Pueblo Bonito.\n• Whereas typical domestic settlements grew incrementally without a master plan, Chacoan great houses followed precise astronomical alignments with solar solstices and the 18.6-year lunar standstill cycle.\n• A petroglyph spiral high on Fajada Butte, known as the Sun Dagger, was framed by three sandstone slabs to slice a beam of light through the spiral's center on the summer solstice.\n• Archaeologists view these alignments as evidence of sophisticated civic and ceremonial coordination across the San Juan Basin.",
+                  goal: "contrast the architectural planning of Chacoan great houses with that of typical domestic settlements",
+                  opt: "Unlike typical domestic settlements that expanded incrementally without a master plan, Chacoan great houses were constructed to align precisely with solar solstices and the lunar standstill cycle.",
                   bads: [
-                    "Launched in December 2021, the James Webb Space Telescope detected candidate galaxy JADES-GS-z14-0 in 2023.",
-                    "Both the Hubble Space Telescope and the James Webb Space Telescope have contributed fundamentally to modern observational cosmology.",
-                    "JADES-GS-z14-0 is a record-breaking candidate galaxy whose spectroscopic signature was confirmed using beryllium mirror technology."
+                    "Constructed between 850 and 1150 CE in New Mexico, Pueblo Bonito is one of the largest sandstone great houses in Chaco Canyon.",
+                    "On Fajada Butte, three sandstone slabs channel a dagger of sunlight across a spiral petroglyph during the summer solstice.",
+                    "Archaeologists have studied both Pueblo Bonito and the Fajada Butte Sun Dagger to understand Ancestral Puebloan society."
                   ]
                 },
                 {
@@ -3130,17 +3777,17 @@
                   ]
                 },
                 {
-                  notes: "• In 1938, chemist Roy Plunkett accidentally synthesized polytetrafluoroethylene (PTFE) while researching refrigerant gases.\n• PTFE consists of a carbon chain completely sheathed by strongly bonded fluorine atoms.\n• Because carbon-fluorine bonds are exceptionally stable and non-polar, PTFE exhibits one of the lowest coefficients of friction of any known solid.\n• Industrial engineers utilize PTFE coatings in aerospace bearings, non-stick cookware, and chemically inert laboratory tubing.",
-                  goal: "explain the chemical reason for PTFE's unusually low friction",
-                  opt: "PTFE's exceptionally low friction results from its molecular structure: a carbon chain completely sheathed by stable, non-polar carbon-fluorine bonds.",
+                  notes: "• In 1959, metallurgists William Buehler and Frederick Wang developed Nitinol, an equiatomic alloy of nickel and titanium, at the Naval Ordnance Laboratory.\n• At low temperatures, Nitinol's crystal lattice adopts a flexible, easily deformed martensite phase.\n• When heated above its transformation temperature, the alloy's atoms snap back into a rigid, high-symmetry austenite crystal structure, restoring its original pre-deformed shape.\n• Biomedical engineers leverage this shape-memory effect to manufacture self-expanding cardiovascular stents that deploy inside warm arteries.",
+                  goal: "explain the atomic mechanism behind Nitinol's shape-memory behavior",
+                  opt: "Nitinol recovers its original shape when heated because its crystal lattice transitions from a flexible low-temperature martensite phase back into a rigid high-symmetry austenite structure.",
                   bads: [
-                    "Discovered accidentally by Roy Plunkett in 1938, PTFE is now widely used in aerospace bearings and cookware.",
-                    "Roy Plunkett was investigating refrigerant gases when he first synthesized polytetrafluoroethylene.",
-                    "Industrial engineers value PTFE for its suitability in chemically inert laboratory tubing and non-stick surfaces."
+                    "Developed by William Buehler and Frederick Wang in 1959, Nitinol is an alloy composed of nickel and titanium.",
+                    "Biomedical engineers use Nitinol to manufacture self-expanding cardiovascular stents for surgical procedures.",
+                    "Nitinol was first synthesized at the Naval Ordnance Laboratory before being adopted in biomedical engineering."
                   ]
                 }
               ];
-              const item = list[(occ + examId) % list.length];
+              const item = list[(occ + (examId - 2) * 5) % list.length];
               passage = `While researching a topic, a student has taken the following notes:\n${item.notes}`;
               stem = `The student wants to ${item.goal}. Which choice most effectively uses relevant information from the notes to accomplish this goal?`;
               options = this.makeOptions(correct, item.opt, item.bads);
@@ -3185,8 +3832,6 @@
         const generateMathQuestion = (id, module, qIdx, isSPR) => {
           const mathTypes = QUESTION_TYPES.slice(11); // 21 types
           const qTypeObj = mathTypes[(qIdx - 1 + (module === 1 ? 0 : 10)) % mathTypes.length];
-          const occ = mathTypeCounts[qTypeObj.id] || 0;
-          mathTypeCounts[qTypeObj.id] = occ + 1;
 
           let diff = 'medium';
           if (isExtreme) {
@@ -3197,23 +3842,30 @@
             diff = qIdx <= (module === 1 ? 7 : 5) ? 'easy' : qIdx <= (module === 1 ? 16 : 14) ? 'medium' : 'hard';
           }
 
+          const eIdx = examId - 2; // 0..8 across Mocks 2-10
+
           if (!isSPR) {
+            const occ = mathTypeCounts[qTypeObj.id] || 0;
+            mathTypeCounts[qTypeObj.id] = occ + 1;
+            const u = eIdx * 2 + occ; // 0..17 unique per (examId, occ)
             const correct = pickCorrectLetter();
             let stem, options, explanation;
-            const shift = occ * 7 + module * 3 + examId;
 
             switch (qTypeObj.id) {
               case 'linear-equations-one-var': {
-                const a = [3, 4, 5, 6, 7][(shift) % 5];
-                const b = 2 + ((shift * 2) % 9);
-                const xVal = 3 + ((shift * 3) % 11);
                 if (occ % 2 === 1) {
+                  const a = [3, 4, 5, 6, 7, 8, 9, 11, 12][eIdx];
+                  const b = 2 + eIdx;
+                  const xVal = 4 + eIdx;
                   const exprVal = xVal + b;
                   const rhs = a * exprVal;
                   stem = `If $${a}(x + ${b}) = ${rhs}$, what is the value of $x + ${b}$?`;
                   options = this.makeOptions(correct, String(exprVal), [String(xVal), String(exprVal + a), String(rhs - a)]);
                   explanation = `Divide both sides of $${a}(x + ${b}) = ${rhs}$ directly by ${a} to isolate the target expression: $x + ${b} = \\frac{${rhs}}{${a}} = ${exprVal}$. Option ${correct} is correct.`;
                 } else {
+                  const a = [3, 4, 5, 6, 7, 8, 9, 11, 12][eIdx];
+                  const b = 3 + eIdx * 2;
+                  const xVal = 5 + eIdx;
                   const rhs = a * xVal - b;
                   stem = `What value of $x$ satisfies the linear equation $${a}x - ${b} = ${rhs}$?`;
                   options = this.makeOptions(correct, String(xVal), [String(xVal + 2), String(xVal - 1), String(xVal + 4)]);
@@ -3223,9 +3875,9 @@
               }
 
               case 'linear-equations-two-var': {
-                const m = [2, 3, 4, 5][(shift) % 4];
-                const b = 3 + (shift % 8);
                 if (occ % 2 === 1) {
+                  const m = 2 + (eIdx % 5);
+                  const b = 3 + eIdx * 2;
                   stem = `In the $xy$-plane, line $\\ell$ is parallel to the line $y = ${m}x - 5$ and passes through the point $(0, ${b})$. Which equation defines line $\\ell$?`;
                   options = this.makeOptions(correct, `$y = ${m}x + ${b}$`, [
                     `$y = -\\frac{1}{${m}}x + ${b}$`,
@@ -3234,7 +3886,9 @@
                   ]);
                   explanation = `Parallel lines have identical slopes ($m = ${m}$). Since line $\\ell$ passes through $(0, ${b})$, its $y$-intercept is $${b}$, giving $y = ${m}x + ${b}$. Option ${correct} is correct.`;
                 } else {
-                  const x0 = 2 + ((shift + module) % 5);
+                  const m = 2 + (eIdx % 4);
+                  const b = 4 + eIdx;
+                  const x0 = 2 + eIdx;
                   const y0 = m * x0 + b;
                   stem = `A line in the $xy$-plane passes through the point $(${x0}, ${y0})$ and has a slope of $${m}$. What is the $y$-intercept of the line?`;
                   options = this.makeOptions(correct, String(b), [String(b + 3), String(b - 2), String(b + 6)]);
@@ -3244,9 +3898,9 @@
               }
 
               case 'linear-functions': {
-                const rate = [15, 20, 25, 30, 35, 40][shift % 6];
-                const base = [35, 45, 50, 60, 75][(shift + occ) % 5];
                 if (occ % 2 === 1) {
+                  const rate = 15 + eIdx * 5;
+                  const base = 35 + eIdx * 10;
                   stem = `The function $f(t) = ${rate}t + ${base}$ models the total cost, in dollars, of renting an industrial generator for $t$ hours. What is the best interpretation of $${rate}$ in this context?`;
                   options = this.makeOptions(correct, `The hourly rental rate, in dollars per hour`, [
                     `The initial flat deposit fee, in dollars`,
@@ -3255,7 +3909,9 @@
                   ]);
                   explanation = `In the linear model $f(t) = ${rate}t + ${base}$, the coefficient $${rate}$ is the rate of change (slope), representing the hourly rental cost in dollars per hour. Option ${correct} is correct.`;
                 } else {
-                  const hrs = 3 + ((shift + module) % 6);
+                  const rate = 20 + eIdx * 5;
+                  const base = 40 + eIdx * 5;
+                  const hrs = 3 + (eIdx % 6);
                   const total = base + rate * hrs;
                   stem = `A repair technician charges a flat diagnostic fee of $\\$${base}$ plus an hourly labor rate of $\\$${rate}$ per hour. If a customer was billed $\\$${total}$, for how many hours of labor was the customer charged?`;
                   options = this.makeOptions(correct, String(hrs), [String(hrs + 1), String(hrs - 1), String(hrs + 2)]);
@@ -3265,14 +3921,17 @@
               }
 
               case 'systems-linear-equations': {
-                const mult = [2, 3, 4, 5][shift % 4];
-                const aCoeff = [3, 5, 7, 9][(shift + occ) % 4];
-                const cTarget = aCoeff * mult;
                 if (occ % 2 === 1) {
+                  const mult = 2 + (eIdx % 4);
+                  const aCoeff = [2, 4, 5, 7, 8, 11, 13, 14, 16][eIdx];
+                  const cTarget = aCoeff * mult;
                   stem = `$$\\begin{cases} ${aCoeff}x - 3y = 10 \\\\ cx - ${3 * mult}y = 7 \\end{cases}$$\nIn the given system of linear equations, $c$ is a constant. If the system has no solution, what is the value of $c$?`;
                   options = this.makeOptions(correct, String(cTarget), [String(cTarget - 2), String(cTarget + 2), String(cTarget + 5)]);
                   explanation = `A system of linear equations has no solution when the lines are parallel (proportional $x$ and $y$ coefficients with non-proportional constants). Since $-${3 * mult} = ${mult}(-3)$, we need $c = ${mult}(${aCoeff}) = ${cTarget}$. Option ${correct} is correct.`;
                 } else {
+                  const mult = 2 + ((eIdx + 1) % 4);
+                  const aCoeff = [3, 5, 7, 9, 11, 13, 15, 17, 19][eIdx];
+                  const cTarget = aCoeff * mult;
                   stem = `$$\\begin{cases} ${aCoeff}x + 4y = 12 \\\\ cx + ${4 * mult}y = ${12 * mult} \\end{cases}$$\nIn the given system of linear equations, $c$ is a constant. If the system has infinitely many solutions, what is the value of $c$?`;
                   options = this.makeOptions(correct, String(cTarget), [String(cTarget - 2), String(cTarget + 2), String(cTarget + 5)]);
                   explanation = `For infinitely many solutions, the two equations must be proportional multiples. Multiplying the first equation by ${mult} gives $${aCoeff * mult}x + ${4 * mult}y = ${12 * mult}$. Therefore, $c = ${cTarget}$. Option ${correct} is correct.`;
@@ -3281,9 +3940,9 @@
               }
 
               case 'linear-inequalities': {
-                const cap = [120, 150, 180, 200, 240, 280][shift % 6];
-                const c1 = [12, 15, 18, 22][(shift + occ) % 4];
-                const c2 = [7, 9, 11, 13][(shift + module) % 4];
+                const cap = 150 + u * 15;
+                const c1 = 12 + u;
+                const c2 = 7 + (u % 7);
                 stem = `A warehouse worker is loading boxes of type A weighing $${c1}$ pounds each and type B weighing $${c2}$ pounds each onto a pallet with a maximum load capacity of $${cap}$ pounds. Which inequality represents all possible combinations of $x$ boxes of type A and $y$ boxes of type B that can be safely loaded?`;
                 options = this.makeOptions(correct, `$${c1}x + ${c2}y \\le ${cap}$`, [
                   `$${c1}x + ${c2}y \\ge ${cap}$`,
@@ -3295,7 +3954,7 @@
               }
 
               case 'equivalent-expressions': {
-                const k = 3 + (shift % 9);
+                const k = 3 + u;
                 const kSq = k * k;
                 stem = `Which of the following expressions is equivalent to $(x - ${k})(x + ${k})$?`;
                 options = this.makeOptions(correct, `$x^2 - ${kSq}$`, [
@@ -3308,16 +3967,18 @@
               }
 
               case 'nonlinear-equations': {
-                const bVal = [6, 8, 10, 12, 14, 16][shift % 6];
-                const kVal = (bVal * bVal) / 4;
+                const halfB = 3 + (u % 8);
+                const bVal = 2 * halfB;
+                const cShift = 2 + u;
+                const kVal = halfB * halfB + cShift;
                 stem = `The parabola $y = x^2 - ${bVal}x + ${kVal}$ is tangent to the horizontal line $y = c$. What is the value of $c$?`;
-                options = this.makeOptions(correct, "0", ["-4", "4", String(kVal)]);
-                explanation = `The vertex $y$-coordinate occurs at $x = \\frac{${bVal}}{2} = ${bVal / 2}$. Substituting: $y = (${bVal / 2})^2 - ${bVal}(${bVal / 2}) + ${kVal} = ${kVal} - ${2 * kVal} + ${kVal} = 0$. The tangent line is $y = 0$. Option ${correct} is correct.`;
+                options = this.makeOptions(correct, String(cShift), ["0", String(-cShift), String(kVal)]);
+                explanation = `Complete the square: $y = (x - ${halfB})^2 - ${halfB * halfB} + ${kVal} = (x - ${halfB})^2 + ${cShift}$. The vertex is $(${halfB}, ${cShift})$, so the horizontal tangent line is $y = ${cShift}$. Option ${correct} is correct.`;
                 break;
               }
 
               case 'quadratics': {
-                const b = [6, 8, 10, 12, 14, 16][shift % 6];
+                const b = 2 * (3 + u);
                 const kTarget = (b * b) / 4;
                 stem = `In the quadratic equation $x^2 - ${b}x + k = 0$, $k$ is a constant. For what value of $k$ does the equation have exactly one distinct real solution?`;
                 options = this.makeOptions(correct, String(kTarget), [String(kTarget - 4), String(kTarget + 4), String(kTarget * 2)]);
@@ -3326,9 +3987,9 @@
               }
 
               case 'exponentials': {
-                const init = [100, 250, 400, 500, 750, 900][shift % 6];
-                const mult = [2, 3][(shift + occ) % 2];
-                const period = [4, 5, 6, 7][(shift + module) % 4];
+                const init = 120 + u * 35;
+                const mult = 2 + (u % 3);
+                const period = 5 + (u % 5);
                 stem = `A culture of bacteria begins with an initial population of $${init}$ cells and multiplies by a factor of $${mult}$ every $${period}$ hours. Which function $P(t)$ models the population of the culture after $t$ hours?`;
                 options = this.makeOptions(correct, `$P(t) = ${init}(${mult})^{\\frac{t}{${period}}}$`, [
                   `$P(t) = ${init}(${mult})^{${period}t}$`,
@@ -3340,8 +4001,8 @@
               }
 
               case 'polynomials': {
-                const r1 = 2 + (shift % 4);
-                const r2 = 6 + ((shift + occ) % 5);
+                const r1 = 2 + (u % 5);
+                const r2 = 7 + u;
                 const bSum = r1 + r2;
                 const cProd = r1 * r2;
                 stem = `The polynomial function $f(x) = x^2 - ${bSum}x + ${cProd}$ has zeros at $x = p$ and $x = q$. What is the value of $p + q$?`;
@@ -3351,7 +4012,7 @@
               }
 
               case 'radicals': {
-                const ans = 3 + (shift % 11);
+                const ans = 3 + u;
                 const kVal = 64 - 2 * ans;
                 stem = `If $\\sqrt{2x + ${kVal}} = 8$, what is the value of $x$?`;
                 options = this.makeOptions(correct, String(ans), [String(ans + 3), String(ans - 2), String(ans + 5)]);
@@ -3360,8 +4021,8 @@
               }
 
               case 'ratios-rates-proportions': {
-                const rate = [42, 48, 54, 60, 65, 72][shift % 6];
-                const hrs = [3, 4, 5, 6][(shift + occ) % 4];
+                const rate = 38 + u * 2;
+                const hrs = 3 + (u % 5);
                 const dist = rate * hrs;
                 stem = `A passenger vehicle travels at an average speed of $${rate}$ miles per hour. At this rate, how many miles will the vehicle travel in $${hrs}$ hours?`;
                 options = this.makeOptions(correct, String(dist), [String(dist - 20), String(dist + 25), String(dist + 50)]);
@@ -3370,9 +4031,9 @@
               }
 
               case 'percentages': {
-                const orig = [60, 80, 120, 140, 160, 200][shift % 6];
-                const pct = [15, 20, 25, 30][(shift + occ) % 4];
-                const discounted = orig * (1 - pct / 100);
+                const orig = 60 + u * 20;
+                const pct = [15, 20, 25, 30, 35, 40][u % 6];
+                const discounted = orig * (100 - pct) / 100;
                 stem = `A winter jacket originally priced at $\\$${orig}$ is on sale for $${pct}\\%$ off. What is the sale price of the jacket before sales tax?`;
                 options = this.makeOptions(correct, `$${discounted}`, [`$${discounted - 6}`, `$${discounted + 8}`, `$${discounted + 14}`]);
                 explanation = `Sale price $= ${orig} \\times (1 - ${pct/100}) = ${orig} \\times ${1 - pct/100} = \\$${discounted}$. Option ${correct} is correct.`;
@@ -3380,16 +4041,22 @@
               }
 
               case 'one-variable-data': {
-                const baseMean = [74, 78, 82, 86, 90, 92][shift % 6];
-                stem = `A student scored $${baseMean - 6}$, $${baseMean - 2}$, $${baseMean + 2}$, and $${baseMean + 6}$ on four exams. What score must the student earn on the fifth exam to achieve an overall mean of $${baseMean}$?`;
-                options = this.makeOptions(correct, String(baseMean), [String(baseMean + 4), String(baseMean - 4), String(baseMean + 8)]);
-                explanation = `Total points needed for a mean of ${baseMean} over 5 exams is $5 \\times ${baseMean} = ${5 * baseMean}$. The sum of the first four exams is $4 \\times ${baseMean} = ${4 * baseMean}$. Thus the fifth exam score must be $${5 * baseMean} - ${4 * baseMean} = ${baseMean}$. Option ${correct} is correct.`;
+                const baseMean = 72 + u;
+                const delta = 2 + (u % 4);
+                const s1 = baseMean - 7;
+                const s2 = baseMean - 3;
+                const s3 = baseMean + 2;
+                const s4 = baseMean + 5 - delta;
+                const fifthScore = 5 * baseMean - (s1 + s2 + s3 + s4);
+                stem = `A student scored $${s1}$, $${s2}$, $${s3}$, and $${s4}$ on four exams. What score must the student earn on the fifth exam to achieve an overall mean of $${baseMean}$?`;
+                options = this.makeOptions(correct, String(fifthScore), [String(baseMean), String(fifthScore - 3), String(fifthScore + 4)]);
+                explanation = `Total points needed for a mean of ${baseMean} over 5 exams is $5 \\times ${baseMean} = ${5 * baseMean}$. The sum of the first four exams is $${s1} + ${s2} + ${s3} + ${s4} = ${s1 + s2 + s3 + s4}$. Thus the fifth exam score must be $${5 * baseMean} - ${s1 + s2 + s3 + s4} = ${fifthScore}$. Option ${correct} is correct.`;
                 break;
               }
 
               case 'two-variable-data': {
-                const mSlope = [1.5, 2.2, 2.5, 3.2, 3.5, 4.5][shift % 6];
-                const hrs = [8, 10, 12][(shift + occ) % 3];
+                const mSlope = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0][u % 6];
+                const hrs = 5 + u;
                 const pred = Math.round((mSlope * hrs + 4) * 10) / 10;
                 stem = `In a scatterplot showing the relationship between study hours $x$ and test score gains $y$, the line of best fit has equation $y = ${mSlope}x + 4$. According to this model, what is the predicted score gain for a student who studies for $${hrs}$ hours?`;
                 options = this.makeOptions(correct, String(pred), [String(pred - 5), String(pred + 4), String(pred + 9)]);
@@ -3398,15 +4065,18 @@
               }
 
               case 'probability': {
-                const nA = [11, 13, 17, 19, 23][shift % 5];
-                const nB = [6, 8, 12, 14, 16][(shift + occ) % 5];
-                const total = nA + nB;
                 if (occ % 2 === 1) {
-                  const nSuccess = nA - 4;
+                  const nA = 15 + eIdx * 2;
+                  const nB = 8 + eIdx;
+                  const total = nA + nB;
+                  const nSuccess = nA - (3 + (eIdx % 4));
                   stem = `In a clinical study of $${total}$ participants, $${nA}$ participants received Treatment X and $${nB}$ received a placebo. Of those who received Treatment X, $${nSuccess}$ experienced symptom relief. If a participant who received Treatment X is selected at random, what is the probability that the participant experienced symptom relief?`;
                   options = this.makeOptions(correct, `${nSuccess}/${nA}`, [`${nSuccess}/${total}`, `${nA}/${total}`, `${nSuccess}/${nB}`]);
                   explanation = `Given that the selected participant received Treatment X (sample space $= ${nA}$), the conditional probability of symptom relief is $\\frac{${nSuccess}}{${nA}}$. Option ${correct} is correct.`;
                 } else {
+                  const nA = 11 + eIdx * 2;
+                  const nB = 6 + eIdx;
+                  const total = nA + nB;
                   stem = `A box contains $${nA}$ red marbles and $${nB}$ blue marbles. If one marble is randomly selected from the box, what is the probability that the selected marble is red?`;
                   options = this.makeOptions(correct, `${nA}/${total}`, [`${nB}/${total}`, `${nA}/${nB}`, `${nB}/${nA}`]);
                   explanation = `Probability $= \\frac{\\text{favorable outcomes}}{\\text{total outcomes}} = \\frac{${nA}}{${total}}$. Option ${correct} is correct.`;
@@ -3415,9 +4085,9 @@
               }
 
               case 'sample-statistics-experiments': {
-                const nSample = [500, 650, 800, 950, 1100, 1250][shift % 6];
-                const pct = [52, 55, 58, 61, 64][(shift + occ) % 5];
-                const moe = [2.5, 3.0, 3.5, 4.0][(shift + module) % 4];
+                const nSample = 450 + u * 50;
+                const pct = 51 + (u % 12);
+                const moe = [2.0, 2.5, 3.0, 3.5, 4.0, 4.5][u % 6];
                 const low = pct - moe;
                 const high = pct + moe;
                 stem = `A researcher surveyed a representative random sample of $${nSample}$ registered voters in a city and found that $${pct}\\%$ support a proposed municipal transit expansion, with a margin of error of $${moe}\\%$. Which of the following conclusions is best supported by this survey?`;
@@ -3432,8 +4102,8 @@
               }
 
               case 'area-and-volume': {
-                const rad = [3, 5, 6, 7][shift % 4];
-                const h = [6, 8, 10, 12, 14][(shift + occ) % 5];
+                const rad = 3 + (u % 6);
+                const h = 5 + u;
                 const vol = rad * rad * h;
                 stem = `A right circular cylinder has a base radius of $${rad}$ cm and a height of $${h}$ cm. What is the volume of the cylinder in terms of $\\pi$?`;
                 options = this.makeOptions(correct, `${vol}π`, [`${rad * h}π`, `${2 * rad * h}π`, `${vol * 2}π`]);
@@ -3442,8 +4112,8 @@
               }
 
               case 'lines-angles-triangles': {
-                const a1 = [38, 44, 50, 56, 62][shift % 5];
-                const a2 = [52, 58, 64, 70][(shift + occ) % 4];
+                const a1 = 32 + u * 2;
+                const a2 = 48 + (u % 7) * 3;
                 const a3 = 180 - a1 - a2;
                 stem = `In triangle $ABC$, the measure of angle $A$ is $${a1}^\\circ$ and the measure of angle $B$ is $${a2}^\\circ$. What is the measure of angle $C$?`;
                 options = this.makeOptions(correct, `${a3}°`, [`${a3 - 10}°`, `${a3 + 10}°`, `${180 - a1}°`]);
@@ -3452,7 +4122,7 @@
               }
 
               case 'right-triangle-trigonometry': {
-                const ang = [23, 29, 35, 41, 53, 64][shift % 6];
+                const ang = 18 + u * 3;
                 const comp = 90 - ang;
                 stem = `In a right triangle, one acute angle measures $${ang}^\\circ$. Which of the following expressions is equivalent to $\\sin(${ang}^\\circ)$?`;
                 options = this.makeOptions(correct, `$\\cos(${comp}^\\circ)$`, [
@@ -3466,15 +4136,18 @@
 
               case 'circles':
               default: {
-                const r = [4, 5, 6, 8, 9][shift % 5];
-                const h = 2 + (shift % 6);
-                const k = 3 + ((shift + occ) % 6);
                 if (occ % 2 === 1) {
+                  const r = 5 + eIdx;
+                  const h = 2 + eIdx;
+                  const k = 3 + (eIdx % 5);
                   const rhsConst = r * r - h * h - k * k;
                   stem = `In the $xy$-plane, the graph of the equation $x^2 + y^2 - ${2 * h}x + ${2 * k}y = ${rhsConst}$ is a circle. What is the radius of this circle?`;
                   options = this.makeOptions(correct, String(r), [String(r * r), String(h + k), String(2 * r)]);
                   explanation = `Complete the square: $(x - ${h})^2 + (y + ${k})^2 = ${rhsConst} + ${h * h} + ${k * k} = ${r * r}$. Thus $r = \\sqrt{${r * r}} = ${r}$. Option ${correct} is correct.`;
                 } else {
+                  const r = 4 + eIdx;
+                  const h = 3 + eIdx;
+                  const k = 2 + (eIdx % 6);
                   const cVal = -k + r;
                   stem = `A circle in the $xy$-plane has equation $(x - ${h})^2 + (y + ${k})^2 = ${r * r}$. If the horizontal line $y = c$ is tangent to the topmost point of the circle, what is the value of $c$?`;
                   options = this.makeOptions(correct, String(cVal), [String(cVal - 2), String(cVal + 2), String(cVal + 5)]);
@@ -3508,9 +4181,9 @@
                 case 0: { // linear equation SPR
                   sprDomain = 'algebra';
                   sprQuestionType = 'linear-equations-one-var';
-                  const m = prng.choice([3, 4, 5]);
-                  const c = prng.randInt(4, 12);
-                  const xAns = prng.randInt(4, 15);
+                  const m = 3 + (eIdx % 4);
+                  const c = 4 + eIdx;
+                  const xAns = 5 + eIdx * 2;
                   const rhs = m * xAns + c;
                   stem = `If $${m}x + ${c} = ${rhs}$, what is the value of $x$?`;
                   correctAnswer = [String(xAns)];
@@ -3520,7 +4193,7 @@
                 case 1: { // radicals SPR
                   sprDomain = 'advanced-math';
                   sprQuestionType = 'radicals';
-                  const ans = prng.randInt(4, 16);
+                  const ans = 4 + eIdx * 2;
                   const kVal = 144 - 3 * ans;
                   stem = `If $\\sqrt{3x + ${kVal}} = 12$, what is the value of $x$?`;
                   correctAnswer = [String(ans)];
@@ -3530,9 +4203,9 @@
                 case 2: { // percentages SPR
                   sprDomain = 'problem-solving-and-data-analysis';
                   sprQuestionType = 'percentages';
-                  const baseVal = prng.choice([50, 80, 120, 200]);
-                  const incPct = prng.choice([15, 25, 30, 40]);
-                  const finalVal = baseVal * (1 + incPct / 100);
+                  const baseVal = 50 + eIdx * 20;
+                  const incPct = [10, 20, 30, 40, 50, 20, 30, 40, 50][eIdx];
+                  const finalVal = baseVal * (100 + incPct) / 100;
                   stem = `A store increased the price of an item from $\\$${baseVal}$ to $\\$${finalVal}$. What is the percentage increase in the price of the item?`;
                   correctAnswer = [String(incPct)];
                   explanation = `Percentage increase $= \\frac{${finalVal} - ${baseVal}}{${baseVal}} \\times 100 = \\frac{${finalVal - baseVal}}{${baseVal}} \\times 100 = ${incPct}\\%$.`;
@@ -3541,9 +4214,9 @@
                 case 3: { // circles SPR
                   sprDomain = 'geometry-and-trigonometry';
                   sprQuestionType = 'circles';
-                  const rad = prng.choice([3, 5, 7, 9]);
-                  const h = prng.randInt(1, 9);
-                  const k = prng.randInt(1, 9);
+                  const rad = 3 + eIdx;
+                  const h = 2 + eIdx;
+                  const k = 1 + (eIdx % 7);
                   stem = `A circle in the $xy$-plane has equation $(x - ${h})^2 + (y - ${k})^2 = ${rad * rad}$. What is the radius of the circle?`;
                   correctAnswer = [String(rad)];
                   explanation = `In $(x - h)^2 + (y - k)^2 = r^2$, $r^2 = ${rad * rad} \\implies r = ${rad}$.`;
@@ -3552,8 +4225,8 @@
                 case 4: { // quadratics SPR
                   sprDomain = 'advanced-math';
                   sprQuestionType = 'quadratics';
-                  const r1 = prng.randInt(2, 6);
-                  const r2 = prng.randInt(7, 12);
+                  const r1 = 2 + (eIdx % 5);
+                  const r2 = 8 + eIdx;
                   const bSum = r1 + r2;
                   const cProd = r1 * r2;
                   stem = `What positive value of $x$ satisfies the quadratic equation $x^2 - ${bSum}x + ${cProd} = 0$, given that $x > ${r1}$?`;
@@ -3565,9 +4238,9 @@
                 default: { // ratios SPR
                   sprDomain = 'problem-solving-and-data-analysis';
                   sprQuestionType = 'ratios-rates-proportions';
-                  const n1 = prng.choice([4, 6, 8]);
-                  const n2 = prng.choice([10, 15, 20]);
-                  const scale = prng.randInt(2, 5);
+                  const n1 = 3 + eIdx;
+                  const n2 = 10 + eIdx * 2;
+                  const scale = 2 + (eIdx % 4);
                   const n3 = n1 * scale;
                   const n4 = n2 * scale;
                   stem = `If $\\frac{${n1}}{${n2}} = \\frac{${n3}}{y}$, what is the value of $y$?`;
@@ -3582,10 +4255,10 @@
                 case 0: { // two-var slope SPR
                   sprDomain = 'algebra';
                   sprQuestionType = 'linear-equations-two-var';
-                  const m = prng.choice([2, 3, 4, 5]);
-                  const x1 = prng.randInt(1, 4);
-                  const x2 = x1 + prng.choice([2, 3]);
-                  const y1 = prng.randInt(2, 8);
+                  const m = 2 + (eIdx % 5);
+                  const x1 = 1 + eIdx;
+                  const x2 = x1 + 2 + (eIdx % 2);
+                  const y1 = 2 + eIdx;
                   const y2 = y1 + m * (x2 - x1);
                   stem = `In the $xy$-plane, what is the slope of the line passing through points $(${x1}, ${y1})$ and $(${x2}, ${y2})$?`;
                   correctAnswer = [String(m)];
@@ -3595,8 +4268,8 @@
                 case 1: { // systems solution x + y SPR
                   sprDomain = 'algebra';
                   sprQuestionType = 'systems-linear-equations';
-                  const xAns = prng.randInt(3, 8);
-                  const yAns = prng.randInt(2, 6);
+                  const xAns = 3 + eIdx;
+                  const yAns = 2 + (eIdx % 5);
                   const c1 = 2 * xAns + yAns;
                   const c2 = xAns - yAns;
                   const sum = xAns + yAns;
@@ -3608,8 +4281,8 @@
                 case 2: { // exponentials SPR
                   sprDomain = 'advanced-math';
                   sprQuestionType = 'exponentials';
-                  const p = prng.choice([2, 3, 5]);
-                  const qPow = prng.choice([3, 4]);
+                  const expPairs = [[2, 3], [2, 5], [2, 7], [3, 3], [3, 4], [3, 5], [4, 3], [5, 3], [6, 3]];
+                  const [p, qPow] = expPairs[eIdx];
                   const totalVal = Math.pow(p, qPow);
                   const xNum = (qPow + 1) / 2;
                   const xStr = Number.isInteger(xNum) ? String(xNum) : `${qPow + 1}/2`;
@@ -3621,7 +4294,7 @@
                 case 3: { // quadratic vertex SPR
                   sprDomain = 'advanced-math';
                   sprQuestionType = 'quadratics';
-                  const h = prng.randInt(3, 9);
+                  const h = 3 + eIdx;
                   const b = 2 * h;
                   stem = `What is the $x$-coordinate of the vertex of the parabola $y = x^2 - ${b}x + 15$?`;
                   correctAnswer = [String(h)];
@@ -3631,9 +4304,9 @@
                 case 4: { // volume of rectangular prism SPR
                   sprDomain = 'geometry-and-trigonometry';
                   sprQuestionType = 'area-and-volume';
-                  const l = prng.randInt(3, 6);
-                  const w = prng.randInt(2, 5);
-                  const h = prng.randInt(4, 8);
+                  const l = 3 + eIdx;
+                  const w = 2 + (eIdx % 4);
+                  const h = 4 + (eIdx % 5);
                   const vol = l * w * h;
                   stem = `A rectangular prism has a length of $${l}$ cm, a width of $${w}$ cm, and a height of $${h}$ cm. What is the volume, in cubic centimeters, of the prism?`;
                   correctAnswer = [String(vol)];
@@ -3644,9 +4317,9 @@
                 default: { // circles arc length SPR
                   sprDomain = 'geometry-and-trigonometry';
                   sprQuestionType = 'circles';
-                  const r = prng.choice([6, 9, 12]);
-                  const deg = prng.choice([60, 90, 120]);
-                  const k = (deg / 360) * 2 * r;
+                  const arcPairs = [[6, 60], [6, 90], [6, 120], [9, 60], [9, 80], [9, 120], [12, 45], [12, 60], [12, 75]];
+                  const [r, deg] = arcPairs[eIdx];
+                  const k = (deg * r) / 180;
                   stem = `In a circle with radius $${r}$, an arc has central angle $${deg}^\\circ$. The length of the arc is $k\\pi$. What is the value of $k$?`;
                   correctAnswer = [String(k)];
                   explanation = `Arc length $= \\frac{\\theta}{360} \\times 2\\pi r = \\frac{${deg}}{360} \\times 2\\pi(${r}) = ${k}\\pi$. Thus $k = ${k}$.`;
@@ -3928,9 +4601,9 @@
         domain: "standard-english-conventions",
         questionType: "boundaries",
         difficulty: "easy",
-        passage: "Composer Florence Price composed her Symphony in E minor in 1932 ________ it premiered with the Chicago Symphony Orchestra the following year, marking the first performance of a symphony by a Black woman by a major American orchestra.",
+        passage: "Composer Florence Price composed her Symphony in E minor in ________ it premiered with the Chicago Symphony Orchestra the following year, marking the first performance of a symphony by a Black woman by a major American orchestra.",
         stem: "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        options: ["A) ,", "B) and", "C) ;", "D) :"],
+        options: ["A) 1932,", "B) 1932 and", "C) 1932;", "D) 1932:"],
         correctAnswer: "C",
         explanation: "Why Option C is correct:\nThe text consists of two complete independent clauses: 'Composer Florence Price composed her Symphony in E minor in 1932' and 'it premiered with the Chicago Symphony Orchestra the following year...'. A semicolon (';') is the grammatically standard punctuation mark used to separate two independent clauses without a coordinating conjunction.\n\nWhy Distractor A is incorrect:\nA comma alone between two independent clauses creates a grammatically incorrect comma splice.\n\nWhy Distractor B is incorrect:\nA coordinating conjunction ('and') joining two independent clauses requires a preceding comma (', and'); alone, 'and' lacks required boundary punctuation.\n\nWhy Distractor D is incorrect:\nA colon is used to introduce an explanation, elaboration, or list that directly clarifies the preceding independent clause; the second clause here provides chronological sequence, not an explanatory elaboration."
       },
@@ -4237,9 +4910,9 @@
       { id: 'pink', label: 'Contrast / Trap (Pink)', bg: 'bg-pink-300', swatch: 'bg-pink-300', ring: 'ring-pink-500' }
     ];
 
-    // Interactive Pen, Highlighter Brush & Math Scratchpad (Kalem & Karalama Tahtası)
+    // Interactive Pen, Highlighter Brush & Math Scratchpad (Simplified, Humanized & Non-Blocking)
     function DrawingScratchpadModal({ isOpen, onClose, contextKey = 'default', contextLabel, contextTitle, drawings: propDrawings, setDrawings: propSetDrawings }) {
-      const resolvedLabel = contextLabel || contextTitle || 'Workspace';
+      const resolvedLabel = contextLabel || contextTitle || 'Not';
       const [localDrawings, setLocalDrawings] = React.useState({});
       const drawings = propDrawings || localDrawings;
       const setDrawings = propSetDrawings || setLocalDrawings;
@@ -4248,8 +4921,14 @@
       const isDrawingRef = React.useRef(false);
       const currentStrokeRef = React.useRef(null);
 
-      const [boardMode, setBoardMode] = React.useState('board'); // 'board' (Docked Grid Pad) | 'overlay' (Full Screen Annotation)
+      // Default to 'overlay' with bottom-docked slim pill so questions at the top are never blocked
+      const [boardMode, setBoardMode] = React.useState('overlay'); // 'overlay' (On-screen) | 'board' (Mini Corner Pad)
       const [clickThrough, setClickThrough] = React.useState(false);
+      const [isMinimized, setIsMinimized] = React.useState(false);
+      const [dockPos, setDockPos] = React.useState('bottom'); // 'bottom' | 'top-right'
+      const [dragOffset, setDragOffset] = React.useState({ x: 0, y: 0 });
+      const dragStartRef = React.useRef(null);
+
       const [tool, setTool] = React.useState('pen'); // 'pen' | 'highlighter' | 'eraser'
       const [penColor, setPenColor] = React.useState('#4f46e5');
       const [penWidth, setPenWidth] = React.useState(3);
@@ -4257,12 +4936,11 @@
       const activeStrokes = React.useMemo(() => (drawings && drawings[contextKey]) || [], [drawings, contextKey]);
 
       const PEN_COLORS = [
-        { hex: '#4f46e5', name: 'Indigo' },
-        { hex: '#e11d48', name: 'Rose Red' },
-        { hex: '#059669', name: 'Emerald' },
-        { hex: '#d97706', name: 'Amber' },
-        { hex: '#0284c7', name: 'Sky Blue' },
-        { hex: '#1e293b', name: 'Dark Slate' }
+        { hex: '#4f46e5', name: 'Mavi (Indigo)' },
+        { hex: '#e11d48', name: 'Kırmızı (Rose)' },
+        { hex: '#059669', name: 'Yeşil (Emerald)' },
+        { hex: '#d97706', name: 'Turuncu (Amber)' },
+        { hex: '#1e293b', name: 'Siyah (Slate)' }
       ];
 
       // Redraw all strokes for active contextKey
@@ -4284,8 +4962,8 @@
             ctx.strokeStyle = 'rgba(0,0,0,1)';
           } else if (stroke.tool === 'highlighter') {
             ctx.globalCompositeOperation = 'source-over';
-            ctx.globalAlpha = 0.35;
-            ctx.lineWidth = 18;
+            ctx.globalAlpha = 0.32;
+            ctx.lineWidth = 16;
             ctx.strokeStyle = stroke.color || '#eab308';
           } else {
             ctx.globalCompositeOperation = 'source-over';
@@ -4323,7 +5001,7 @@
         resize();
         window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
-      }, [isOpen, boardMode, contextKey, redrawCanvas]);
+      }, [isOpen, boardMode, isMinimized, contextKey, redrawCanvas]);
 
       React.useEffect(() => {
         if (isOpen) redrawCanvas();
@@ -4389,152 +5067,235 @@
         setDrawings(prev => ({ ...prev, [contextKey]: [] }));
       };
 
+      const cycleWidth = () => {
+        setPenWidth(prev => (prev === 2 ? 4 : prev === 4 ? 6 : 2));
+      };
+
+      // Dragging support for the toolbar pill / card
+      const startToolbarDrag = (e) => {
+        if (e.target.closest('button')) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        dragStartRef.current = {
+          startX: clientX - dragOffset.x,
+          startY: clientY - dragOffset.y
+        };
+        const onMove = (moveEvent) => {
+          if (!dragStartRef.current) return;
+          const cx = moveEvent.touches ? moveEvent.touches[0].clientX : moveEvent.clientX;
+          const cy = moveEvent.touches ? moveEvent.touches[0].clientY : moveEvent.clientY;
+          setDragOffset({
+            x: cx - dragStartRef.current.startX,
+            y: cy - dragStartRef.current.startY
+          });
+        };
+        const onUp = () => {
+          dragStartRef.current = null;
+          window.removeEventListener('mousemove', onMove);
+          window.removeEventListener('mouseup', onUp);
+          window.removeEventListener('touchmove', onMove);
+          window.removeEventListener('touchend', onUp);
+        };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+        window.addEventListener('touchmove', onMove);
+        window.addEventListener('touchend', onUp);
+      };
+
+      // Minimized Floating Chip (never blocks anything)
+      if (isMinimized) {
+        return (
+          <div className="fixed bottom-16 right-4 z-50 flex items-center space-x-1.5 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-slate-200 dark:border-zinc-700 rounded-full px-3 py-1.5 shadow-lg">
+            <button
+              onClick={() => setIsMinimized(false)}
+              className="flex items-center space-x-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+              title="Kalem araç çubuğunu aç"
+            >
+              <Icon name="PenTool" className="w-3.5 h-3.5" />
+              <span>Kalem Açık ({activeStrokes.length})</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="p-0.5 text-slate-400 hover:text-rose-500 rounded-full"
+              title="Kapat"
+            >
+              <Icon name="X" className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        );
+      }
+
+      const pillPositionClass =
+        dockPos === 'bottom'
+          ? 'fixed bottom-16 right-4'
+          : 'fixed bottom-16 left-4';
+
       return (
         <div
           className={
             boardMode === 'overlay'
-              ? `fixed inset-0 z-40 ${clickThrough ? 'pointer-events-none' : ''}`
-              : 'fixed bottom-16 right-4 z-40 w-[92vw] sm:w-[440px] h-[380px] bg-white dark:bg-zinc-900 border-2 border-indigo-500/70 dark:border-indigo-500 rounded-2xl shadow-2xl flex flex-col overflow-hidden'
+              ? `fixed top-14 bottom-14 left-0 right-0 z-30 ${clickThrough ? 'pointer-events-none' : ''}`
+              : 'fixed bottom-16 right-4 z-40 w-[88vw] sm:w-[340px] h-[250px] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-slate-200/90 dark:border-zinc-700 rounded-2xl shadow-xl flex flex-col overflow-hidden'
+          }
+          style={
+            boardMode === 'board' && (dragOffset.x !== 0 || dragOffset.y !== 0)
+              ? { transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }
+              : undefined
           }
         >
-          {/* Floating Top/Header Toolbar */}
+          {/* Single Compact, Humanized Toolbar Pill (Docked at bottom-right in empty margin so questions & options are 100% unobstructed) */}
           <div
+            onMouseDown={startToolbarDrag}
+            onTouchStart={startToolbarDrag}
+            style={
+              boardMode === 'overlay' && (dragOffset.x !== 0 || dragOffset.y !== 0)
+                ? { transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }
+                : undefined
+            }
             className={
               boardMode === 'overlay'
-                ? 'pointer-events-auto fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white border border-slate-700 rounded-2xl px-3.5 py-2 shadow-2xl flex flex-wrap items-center gap-2 max-w-[96vw]'
-                : 'bg-slate-900 text-white px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 shrink-0'
+                ? `pointer-events-auto ${pillPositionClass} z-50 bg-white/95 dark:bg-zinc-900/95 text-slate-800 dark:text-zinc-100 backdrop-blur-md border border-slate-200/90 dark:border-zinc-700/90 rounded-full px-2.5 py-1 shadow-lg flex flex-wrap items-center gap-1 max-w-[95vw] cursor-move select-none`
+                : 'bg-slate-50/95 dark:bg-zinc-800/95 text-slate-800 dark:text-zinc-100 px-2.5 py-1.5 border-b border-slate-200 dark:border-zinc-700 flex flex-wrap items-center justify-between gap-1 shrink-0 cursor-move select-none'
             }
+            title="Sürükleyerek istediğiniz yere taşıyabilirsiniz"
           >
-            <div className="flex items-center space-x-1.5">
-              <Icon name="PenTool" className="w-4 h-4 text-indigo-400" />
-              <span className="text-xs font-bold tracking-tight">Kalem & Karalama Tahtası</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono">
-                {resolvedLabel}
-              </span>
-            </div>
+            {/* Drag Handle Indicator */}
+            <span className="text-slate-300 dark:text-zinc-600 text-xs px-1 cursor-grab" title="Taşımak için sürükleyin">
+              ⋮⋮
+            </span>
 
-            {/* Mode Switcher: Karalama Defteri vs Ekran Üstü Çizim */}
-            <div className="flex items-center bg-slate-800 rounded-lg p-0.5 text-[11px] font-semibold">
-              <button
-                onClick={() => { setBoardMode('board'); setClickThrough(false); }}
-                className={`px-2 py-0.5 rounded-md transition ${boardMode === 'board' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
-                title="Docked Math Grid Scratchpad"
-              >
-                Kareli Tahta
-              </button>
-              <button
-                onClick={() => setBoardMode('overlay')}
-                className={`px-2 py-0.5 rounded-md transition ${boardMode === 'overlay' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'}`}
-                title="Draw directly on top of the screen/question"
-              >
-                Ekran Üstü Çiz
-              </button>
-            </div>
-
+            {/* In Overlay Mode: Quick Click-Through ("Seç") vs Draw Toggle */}
             {boardMode === 'overlay' && (
               <button
                 onClick={() => setClickThrough(prev => !prev)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
+                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition flex items-center space-x-1 ${
                   clickThrough
-                    ? 'bg-emerald-600 border-emerald-400 text-white'
-                    : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700'
                 }`}
-                title="When active, you can click answer choices and scroll while keeping your drawings on screen"
+                title="Şıkları işaretlemek veya sayfayı kaydırmak için Seç moduna geçin"
               >
-                {clickThrough ? '👆 Gezinme Modu (Tıklanabilir)' : '✏️ Çizim Modu'}
+                <span>{clickThrough ? '👆 Şık Seç' : '✏️ Çiz'}</span>
               </button>
             )}
 
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white ml-auto"
-              title="Close Drawing Tool"
-            >
-              <Icon name="X" className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Secondary Tool & Color Controls Bar */}
-          <div
-            className={
-              boardMode === 'overlay'
-                ? 'pointer-events-auto fixed top-28 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white border border-slate-700 rounded-xl px-3 py-1.5 shadow-xl flex flex-wrap items-center gap-2 max-w-[96vw]'
-                : 'bg-slate-100 dark:bg-zinc-950 px-3 py-1.5 border-b border-slate-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 shrink-0 text-xs'
-            }
-          >
-            {/* Tool Selector */}
-            <div className="flex items-center space-x-1">
+            {/* Core Drawing Tools: Kalem, Fosforlu, Silgi */}
+            <div className="flex items-center bg-slate-100 dark:bg-zinc-800 rounded-full p-0.5">
               <button
                 onClick={() => { setTool('pen'); setClickThrough(false); }}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition ${
-                  tool === 'pen' ? 'bg-indigo-600 text-white shadow-xs' : 'hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center space-x-1 transition ${
+                  tool === 'pen' && !clickThrough
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
+                title="Kalem"
               >
-                <Icon name="PenTool" className="w-3.5 h-3.5" />
+                <Icon name="PenTool" className="w-3 h-3" />
                 <span>Kalem</span>
               </button>
               <button
                 onClick={() => { setTool('highlighter'); setClickThrough(false); }}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition ${
-                  tool === 'highlighter' ? 'bg-amber-500 text-slate-950 shadow-xs' : 'hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                className={`px-2 py-1 rounded-full text-[11px] font-semibold flex items-center space-x-1 transition ${
+                  tool === 'highlighter' && !clickThrough
+                    ? 'bg-amber-400 text-slate-950 shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
+                title="Fosforlu Kalem"
               >
-                <Icon name="Highlighter" className="w-3.5 h-3.5" />
-                <span>Fosforlu</span>
+                <Icon name="Highlighter" className="w-3 h-3" />
+                <span className="hidden sm:inline">Fosforlu</span>
               </button>
               <button
                 onClick={() => { setTool('eraser'); setClickThrough(false); }}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition ${
-                  tool === 'eraser' ? 'bg-rose-600 text-white shadow-xs' : 'hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300'
+                className={`px-2 py-1 rounded-full text-[11px] font-semibold flex items-center space-x-1 transition ${
+                  tool === 'eraser' && !clickThrough
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
+                title="Silgi"
               >
-                <Icon name="Eraser" className="w-3.5 h-3.5" />
-                <span>Silgi</span>
+                <Icon name="Eraser" className="w-3 h-3" />
+                <span className="hidden sm:inline">Silgi</span>
               </button>
             </div>
 
-            {/* Color Swatches */}
-            <div className="flex items-center space-x-1.5">
+            {/* Clean Color Dots */}
+            <div className="flex items-center space-x-1 px-1">
               {PEN_COLORS.map(c => (
                 <button
                   key={c.hex}
-                  onClick={() => { setPenColor(c.hex); if (tool === 'eraser') setTool('pen'); }}
+                  onClick={() => { setPenColor(c.hex); if (tool === 'eraser') setTool('pen'); setClickThrough(false); }}
                   title={c.name}
                   style={{ backgroundColor: c.hex }}
-                  className={`w-4 h-4 rounded-full transition transform ${
-                    penColor === c.hex && tool !== 'eraser' ? 'scale-125 ring-2 ring-offset-1 ring-indigo-400' : 'opacity-80 hover:opacity-100'
+                  className={`w-3.5 h-3.5 rounded-full transition ${
+                    penColor === c.hex && tool !== 'eraser'
+                      ? 'ring-2 ring-offset-1 ring-indigo-500 scale-110'
+                      : 'opacity-70 hover:opacity-100'
                   }`}
                 />
               ))}
             </div>
 
-            {/* Stroke Width & Undo/Clear */}
-            <div className="flex items-center space-x-1.5">
-              {[2, 4, 7].map(w => (
-                <button
-                  key={w}
-                  onClick={() => setPenWidth(w)}
-                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-mono font-bold ${
-                    penWidth === w ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400'
-                  }`}
-                  title={`Thickness ${w}px`}
-                >
-                  {w === 2 ? 'S' : w === 4 ? 'M' : 'L'}
-                </button>
-              ))}
+            {/* 1-Click Stroke Width Cycle */}
+            <button
+              onClick={cycleWidth}
+              className="w-6 h-6 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 flex items-center justify-center text-[10px] font-bold text-slate-700 dark:text-zinc-300"
+              title={`Çizgi Kalınlığı: ${penWidth === 2 ? 'İnce' : penWidth === 4 ? 'Orta' : 'Kalın'} (Değiştirmek için tıklayın)`}
+            >
+              <span
+                className="rounded-full bg-current"
+                style={{ width: `${penWidth + 2}px`, height: `${penWidth + 2}px` }}
+              />
+            </button>
+
+            {/* Undo & Clear */}
+            <div className="flex items-center space-x-1">
               <button
                 onClick={handleUndo}
-                className="px-2 py-0.5 rounded bg-slate-200 dark:bg-zinc-800 hover:bg-slate-300 dark:hover:bg-zinc-700 text-[11px] font-semibold text-slate-700 dark:text-zinc-200"
-                title="Undo last stroke"
+                disabled={activeStrokes.length === 0}
+                className="px-2 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 disabled:opacity-40 text-[11px] font-medium text-slate-700 dark:text-zinc-300"
+                title="Son çizgiyi geri al"
               >
-                Geri Al
+                ↩
               </button>
               <button
                 onClick={handleClear}
-                className="px-2 py-0.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-[11px] font-semibold text-rose-500 dark:text-rose-400"
-                title="Clear canvas"
+                disabled={activeStrokes.length === 0}
+                className="px-2 py-1 rounded-full bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 disabled:opacity-40 text-[11px] font-medium text-rose-600 dark:text-rose-400"
+                title="Tüm çizimleri temizle"
               >
                 Temizle
+              </button>
+            </div>
+
+            {/* Switch between On-Screen (Ekran) and Corner Pad (Kağıt) */}
+            <button
+              onClick={() => {
+                setBoardMode(prev => (prev === 'overlay' ? 'board' : 'overlay'));
+                setClickThrough(false);
+                setDragOffset({ x: 0, y: 0 });
+              }}
+              className="px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 text-[11px] font-semibold transition"
+              title={boardMode === 'overlay' ? 'Köşede küçük kareli kağıt aç' : 'Doğrudan ekran üzerinde çiz'}
+            >
+              {boardMode === 'overlay' ? '📐 Kareli Kağıt' : '🖥️ Ekran Üstü'}
+            </button>
+
+            {/* Minimize & Close */}
+            <div className="flex items-center space-x-0.5 ml-0.5">
+              <button
+                onClick={() => setIsMinimized(true)}
+                className="p-1 hover:bg-slate-200 dark:hover:bg-zinc-800 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200"
+                title="Araç çubuğunu küçült"
+              >
+                <span className="text-xs font-bold leading-none px-1">–</span>
+              </button>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-rose-100 dark:hover:bg-rose-950/60 rounded-full text-slate-400 hover:text-rose-600"
+                title="Kalemi kapat"
+              >
+                <Icon name="X" className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
@@ -4545,8 +5306,8 @@
             style={
               boardMode === 'board'
                 ? {
-                    backgroundImage: 'radial-gradient(rgba(99, 102, 241, 0.22) 1px, transparent 1px)',
-                    backgroundSize: '18px 18px'
+                    backgroundImage: 'radial-gradient(rgba(99, 102, 241, 0.2) 1px, transparent 1px)',
+                    backgroundSize: '16px 16px'
                   }
                 : undefined
             }
@@ -5975,34 +6736,42 @@
 
                 {/* Practice Mode Lesson-Friendly Instant Solution & Tool Bar */}
                 {isPracticeMode && (
-                  <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-zinc-800/80">
+                  <div className="mt-5 pt-3.5 border-t border-slate-200/70 dark:border-zinc-800/70">
                     <div className="flex flex-wrap items-center gap-2">
                       <button
                         onClick={() => setShowPracticeSolution(prev => !prev)}
-                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
+                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none ${
                           showPracticeSolution
-                            ? 'bg-indigo-600 text-white shadow-sm'
-                            : 'bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+                            ? 'bg-indigo-600 text-white shadow-xs'
+                            : 'bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200'
                         }`}
                       >
-                        <Icon name="CheckCircle" className="w-4 h-4" />
-                        <span>{showPracticeSolution ? 'Cevabı & Çözümü Gizle (Hide Solution)' : 'Cevabı & Çözümü Gör (Check Answer)'}</span>
+                        <Icon name="CheckCircle" className="w-3.5 h-3.5" />
+                        <span>{showPracticeSolution ? 'Çözümü Gizle' : 'Cevabı Kontrol Et'}</span>
                       </button>
 
                       <button
                         onClick={() => setIsDrawOpen(prev => !prev)}
-                        className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 transition active:scale-[0.98]"
+                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition active:scale-[0.98] ${
+                          isDrawOpen
+                            ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+                            : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
+                        }`}
                       >
                         <Icon name="PenTool" className="w-3.5 h-3.5" />
-                        <span>Kalem / Karalama Tahtası</span>
+                        <span>Kalem</span>
                       </button>
 
                       <button
                         onClick={() => setIsNotepadOpen(prev => !prev)}
-                        className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 transition active:scale-[0.98]"
+                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition active:scale-[0.98] ${
+                          isNotepadOpen
+                            ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                            : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
+                        }`}
                       >
                         <Icon name="StickyNote" className="w-3.5 h-3.5" />
-                        <span>Bu Soruya Not Al</span>
+                        <span>Not Al</span>
                       </button>
                     </div>
 
@@ -6253,14 +7022,14 @@
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">Question Stem Anatomy</h3>
                   <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 rounded-xl border border-indigo-100 dark:border-indigo-900/40 text-sm text-slate-800 dark:text-zinc-200 font-mono whitespace-pre-line leading-relaxed">
-                    {domainData.mechanics.stemAnatomy}
+                    <MathRenderer content={domainData.mechanics.stemAnatomy} />
                   </div>
                 </div>
 
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">Test Frequency & Scoring Weight</h3>
                   <div className="p-4 bg-slate-50 dark:bg-zinc-800/50 rounded-xl border border-slate-200 dark:border-zinc-700/60 text-sm text-slate-700 dark:text-zinc-300">
-                    {domainData.mechanics.testFrequency}
+                    <MathRenderer content={domainData.mechanics.testFrequency} />
                   </div>
                 </div>
               </div>
@@ -6274,15 +7043,15 @@
                     <div>
                       <div className="flex items-center space-x-2 text-rose-600 dark:text-rose-400 font-bold text-sm mb-2">
                         <Icon name="AlertTriangle" className="w-4 h-4" />
-                        <span>{trap.name}</span>
+                        <span><MathRenderer content={trap.name} /></span>
                       </div>
                       <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed mb-4">
-                        {trap.description}
+                        <MathRenderer content={trap.description} />
                       </p>
                     </div>
                     <div className="pt-3 border-t border-slate-200 dark:border-zinc-700 text-xs font-medium text-indigo-600 dark:text-indigo-400 flex items-center space-x-1">
                       <span className="font-bold">Detection Cue:</span>
-                      <span className="text-slate-600 dark:text-zinc-400">{trap.detectionCue}</span>
+                      <span className="text-slate-600 dark:text-zinc-400"><MathRenderer content={trap.detectionCue} /></span>
                     </div>
                   </div>
                 ))}
@@ -6396,7 +7165,7 @@
                             <div className="space-y-1.5 text-slate-700 dark:text-zinc-300">
                               {Object.entries(wItem.trapAnalysis).map(([optKey, trapExp]) => (
                                 <div key={optKey}>
-                                  <strong className="text-slate-900 dark:text-white">Option {optKey}:</strong> {trapExp}
+                                  <strong className="text-slate-900 dark:text-white">Option {optKey}:</strong> <MathRenderer content={trapExp} />
                                 </div>
                               ))}
                             </div>

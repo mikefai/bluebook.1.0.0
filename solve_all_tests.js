@@ -41,12 +41,12 @@ function independentlySolveMath(q) {
   if (s.includes("5x + 15 = 40") && s.includes("x + 3")) return "8";
   if (s.includes("C(t) = 65t + 110") && s.includes("110 represent")) return "The flat consultation fee in dollars";
   if (s.includes("2x - y &= 7") && s.includes("x + 3y &= 14")) return "(5, 3)";
-  if (s.includes("-3x + 12 \\le 27")) return "x \\ge -5";
-  if (s.includes("(3x^2 - 4x + 7) - (x^2 + 5x - 8)")) return "2x^2 - 9x + 15";
-  if (s.includes("x^2 - 8x + 11 = 0")) return "x = 4 \\pm \\sqrt{5}";
-  if (s.includes("250 cells and triples in population every 4 hours")) return "P(t) = 250(3)^{t/4}";
+  if (s.includes("-3x + 12 \\le 27")) return "$x \\ge -5$";
+  if (s.includes("(3x^2 - 4x + 7) - (x^2 + 5x - 8)")) return "$2x^2 - 9x + 15$";
+  if (s.includes("x^2 - 8x + 11 = 0")) return "$x = 4 \\pm \\sqrt{5}$";
+  if (s.includes("250 cells and triples in population every 4 hours")) return "$P(t) = 250(3)^{t/4}$";
   if (s.includes("vertex at $(3, -4)$ that passes through $(1, 8)$")) return "-1";
-  if (s.includes("wholesale for $80") && s.includes("40%") && s.includes("15%")) return "$95.20";
+  if (s.includes("wholesale for $\\$80$") && s.includes("40%") && s.includes("15%")) return "$95.20";
   if (s.includes("180 kilometers per hour") && s.includes("meters per second")) return "50";
   if (s.includes("12, 14, 15, 18, 19, 21, x")) return "27";
   if (s.includes("6 red marbles, 9 blue marbles, and 5 green marbles")) return "3/38";
@@ -60,13 +60,13 @@ function independentlySolveMath(q) {
   if (s.includes("2x^2 - 10x + k = 0")) return "12.5";
   if (s.includes("15 worker-hours") && s.includes("9 computer servers") && s.includes("24 servers")) return "40";
   if (s.includes("center $(4, -2)$ passes through the point $(8, 1)$")) return "25";
-  if (s.includes("adult tickets for $12 each and student tickets for $7 each")) return "70";
+  if (s.includes("adult tickets for $\\$12$ each and student tickets for $\\$7$ each")) return "70";
   if (s.includes("3x - 6y &= 15") && s.includes("2x - 4y &= c")) return "10";
   if (s.includes("y &> 2x - 3") && s.includes("3x + 2y &\\le 12")) return "(1, 2)";
   if (s.includes("x^3 - 4x^2 - 11x + 30")) return "5";
   if (s.includes("y = 2x - 1$ intersect the parabola $y = x^2 - 3x + 5")) return "(2, 3) and (3, 5)";
   if (s.includes("N_0 \\left(\\frac{1}{2}\\right)^{t/18}") && s.includes("160 grams") && s.includes("72 hours")) return "10";
-  if (s.includes("minimum value at the point $(-4, -9)$")) return "f(x) = 2(x + 4)^2 - 9";
+  if (s.includes("minimum value at the point $(-4, -9)$")) return "$f(x) = 2(x + 4)^2 - 9$";
   if (s.includes("\\frac{x^2 + 7x + 12}{x + 3} = ax + b")) return "5";
   if (s.includes("\\hat{y} = 4.2x + 58") && s.includes("8 hours") && s.includes("94")) return "+2.4";
   if (s.includes("240 employees, 65% work in engineering") && s.includes("40 new employees")) return "70%";
@@ -75,12 +75,13 @@ function independentlySolveMath(q) {
   if (s.includes("AB = 15$ and side $BC = 8$") && s.includes("\\cos(A)")) return "15/17";
   if (s.includes("16\\pi$ centimeters and a slant height of 17 centimeters")) return "320π";
   if (s.includes("-\\frac{3}{4}$ and $f(8) = 11$")) return "20";
-  if (s.includes("x^{7/3}")) return "x^2 \\sqrt[3]{x}";
+  if (s.includes("x^{7/3}")) return "$x^2 \\sqrt[3]{x}$";
   if (s.includes("\\frac{2}{3}(x - 6) = 14")) return "27";
   if (s.includes("ax + 4y &= 18") && s.includes("3x + by &= 9")) return "12";
   if (s.includes("x^4 - 13x^2 + 36 = 0")) return "3";
-  if (s.includes("\\sqrt{2x + 15} = x")) return q.options ? "{5}" : "5";
-  if (s.includes("tablet was initially $350") && s.includes("20%") && s.includes("10%")) return "252";
+  if (s.includes("\\sqrt{2x + 15} = x")) return "{5}";
+  if (s.includes("\\sqrt{4x + 21} = x")) return "7";
+  if (s.includes("tablet was initially $\\$350$") && s.includes("20%") && s.includes("10%")) return "252";
   if (s.includes("(x - 3)^2 + (y + 5)^2 = 49") && s.includes("inscribed square")) return "98";
 
   // 2. Parametric algebraic & geometric solvers for Mocks 2–10
@@ -190,7 +191,7 @@ function independentlySolveMath(q) {
   // Percentages winter jacket discount
   if ((m = s.match(/originally priced at \$\\\$(\d+)\$ is on sale for \$(\d+)\\%\$ off/))) {
     const orig = Number(m[1]), pct = Number(m[2]);
-    return `$${orig * (1 - pct / 100)}`;
+    return `$${Math.round(orig * (100 - pct)) / 100}`;
   }
 
   // One-variable data 5th exam score for target mean
@@ -323,9 +324,9 @@ function independentlySolveMath(q) {
   if (s.includes("y = 2x^2 - 8x + 11") && s.includes("y = 4x + k")) return "-7";
   if (s.includes("4x - 3y &= 17") && s.includes("2x + 5y &= -11")) return "6";
   if (s.includes("kx - 6y &= 14") && s.includes("3x - 2y &= 9")) return "9";
-  if (s.includes("f(x) = 2x^2 - 12x + 10")) return "f(x) = 2(x - 3)^2 - 8";
+  if (s.includes("f(x) = 2x^2 - 12x + 10")) return "$f(x) = 2(x - 3)^2 - 8$";
   if (s.includes("enrolled in Chemistry, what is the probability that the student is in the 11th grade")) return "45/73";
-  if (s.includes("Dataset A consists of daily revenues") && s.includes("$12,500")) return "The mean will increase substantially, while the median will remain relatively stable or increase only slightly.";
+  if (s.includes("Dataset A consists of daily revenues") && s.includes("$\\$12,500$")) return "The mean will increase substantially, while the median will remain relatively stable or increase only slightly.";
   if (s.includes("x^2 + y^2 - 10x + 4y = 7")) return "6";
   if (s.includes("\\sin(P) = \\frac{4}{5}")) return "4/5";
 

@@ -240,7 +240,8 @@ suite('Suite 7: Space Optimization & View Spacing Reductions', () => {
 
   // Lessons, Drills, and Analytics View Containers
   assert(content.includes('max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-6'), 'LessonsView container uses compact py-5 sm:py-6 padding');
-  assert(content.includes('max-w-4xl mx-auto px-4 sm:px-6 py-5 sm:py-6'), 'DrillsView container uses compact py-5 sm:py-6 padding');
+  assert(drillsCode.includes('max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-6'), 'DrillsView container uses compact py-5 sm:py-6 padding');
+  assert(content.includes('max-w-4xl mx-auto px-4 sm:px-6 py-5 sm:py-6'), 'SettingsView container uses compact py-5 sm:py-6 padding');
   assert(content.includes('max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-6'), 'AnalyticsView container uses compact py-5 sm:py-6 padding');
 });
 
